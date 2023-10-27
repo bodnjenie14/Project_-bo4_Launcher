@@ -319,7 +319,7 @@ class launcher(QWidget):
                 self.setStyleSheet("background-color: #333;")
 
                 buttons_layout = QHBoxLayout()
-                checkbox = QCheckBox("Reshade")
+                checkbox = QCheckBox("DXVK / Reshade compatibility")
                 buttons_layout.addWidget(checkbox)
                 checkbox.stateChanged.connect(checkbox_state_change)
 
@@ -363,44 +363,47 @@ class launcher(QWidget):
             
         except Exception as e:
             print(f"Something went wrong with start up image, gif or sound files: {e}")
-        
-        if not random_background.lower().endswith(('.gif')):
-            buttons_layout = QHBoxLayout()
 
-        self.volume_slider = QSlider(Qt.Horizontal)
-        self.volume_slider.setMinimum(0)
-        self.volume_slider.setMaximum(100)
-        self.volume_slider.setValue(30)
-        self.volume_slider.valueChanged.connect(self.change_volume)
-        self.volume_slider.setFixedWidth(50) 
-        #self.volume_slider.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        try:
+            if not random_background.lower().endswith(('.gif')):
+                buttons_layout = QHBoxLayout()
 
-        buttons_layout.addWidget(self.volume_slider)
+            self.volume_slider = QSlider(Qt.Horizontal)
+            self.volume_slider.setMinimum(0)
+            self.volume_slider.setMaximum(100)
+            self.volume_slider.setValue(30)
+            self.volume_slider.valueChanged.connect(self.change_volume)
+            self.volume_slider.setFixedWidth(50) 
+            #self.volume_slider.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
-        self.name = QPushButton("Change Name")
-        self.name.clicked.connect(set_name)
-        self.name.setStyleSheet("background-color: #555; color: white;")
-        buttons_layout.addWidget(self.name)
+            buttons_layout.addWidget(self.volume_slider)
 
-        self.change_ip = QPushButton("Change IP Address")
-        self.change_ip.clicked.connect(set_ip)
-        self.change_ip.setStyleSheet("background-color: #555; color: white;")
-        buttons_layout.addWidget(self.change_ip)
+            self.name = QPushButton("Change Name")
+            self.name.clicked.connect(set_name)
+            self.name.setStyleSheet("background-color: #555; color: white;")
+            buttons_layout.addWidget(self.name)
 
-        self.solo_button = QPushButton("Offline")
-        self.solo_button.clicked.connect(lambda: start_game(which="solo"))
-        self.solo_button.setStyleSheet("background-color: #555; color: white;")
-        buttons_layout.addWidget(self.solo_button)
+            self.change_ip = QPushButton("Change IP Address")
+            self.change_ip.clicked.connect(set_ip)
+            self.change_ip.setStyleSheet("background-color: #555; color: white;")
+            buttons_layout.addWidget(self.change_ip)
 
-        self.Multiplayer = QPushButton("Online")
-        self.Multiplayer.clicked.connect(lambda: start_game(which="multi"))
-        self.Multiplayer.setStyleSheet("background-color: #555; color: white;")
-        buttons_layout.addWidget(self.Multiplayer)
+            self.solo_button = QPushButton("Offline")
+            self.solo_button.clicked.connect(lambda: start_game(which="solo"))
+            self.solo_button.setStyleSheet("background-color: #555; color: white;")
+            buttons_layout.addWidget(self.solo_button)
 
-        layout.addLayout(buttons_layout)
+            self.Multiplayer = QPushButton("Online")
+            self.Multiplayer.clicked.connect(lambda: start_game(which="multi"))
+            self.Multiplayer.setStyleSheet("background-color: #555; color: white;")
+            buttons_layout.addWidget(self.Multiplayer)
 
-        self.setLayout(layout)
-    
+            layout.addLayout(buttons_layout)
+
+            self.setLayout(layout)
+        except Exception as e:
+            print(f"Something went wrong with start up image, gif or sound files: {e}")
+            
     def change_volume(self):
         volume = self.volume_slider.value()
         self.player.setVolume(volume)
