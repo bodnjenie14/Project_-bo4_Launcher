@@ -12,7 +12,7 @@ try:
 except Exception as e:
     print(f"Error while removing dll files: {e}")
 
-from PyQt5.QtWidgets import QApplication, QMessageBox, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
 from PyQt5.QtMultimediaWidgets import QVideoWidget
@@ -289,6 +289,8 @@ def checkbox_state_change(state):
         print("Checkbox is unchecked")
         reshade = False
 
+
+
 class launcher(QWidget):
     def __init__(self):
         super().__init__()
@@ -335,12 +337,12 @@ class launcher(QWidget):
 
                 check_box = QVBoxLayout()
         
-                checkbox = QCheckBox("Reshade")
+                checkbox = QCheckBox("DXVK / Reshade compatibility")
                 check_box.addWidget(checkbox)
 
                 checkbox.stateChanged.connect(checkbox_state_change)
                 layout.addLayout(check_box)
-            
+
             #Add startup sound
             try:
                 sound_folder = os.path.join(os.getcwd(), "files\\sounds")
@@ -361,10 +363,19 @@ class launcher(QWidget):
             
         except Exception as e:
             print(f"Something went wrong with start up image, gif or sound files: {e}")
-
         
         if not random_background.lower().endswith(('.gif')):
             buttons_layout = QHBoxLayout()
+
+        self.volume_slider = QSlider(Qt.Horizontal)
+        self.volume_slider.setMinimum(0)
+        self.volume_slider.setMaximum(100)
+        self.volume_slider.setValue(30)
+        self.volume_slider.valueChanged.connect(self.change_volume)
+        self.volume_slider.setFixedWidth(50) 
+        #self.volume_slider.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+        buttons_layout.addWidget(self.volume_slider)
 
         self.name = QPushButton("Change Name")
         self.name.clicked.connect(set_name)
@@ -389,6 +400,10 @@ class launcher(QWidget):
         layout.addLayout(buttons_layout)
 
         self.setLayout(layout)
+    
+    def change_volume(self):
+        volume = self.volume_slider.value()
+        self.player.setVolume(volume)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
