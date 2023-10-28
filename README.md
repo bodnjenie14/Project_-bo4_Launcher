@@ -5,6 +5,9 @@
 
 Launcher for Shield - Project Black ops 4 -  https://github.com/project-bo4/shield-development
 
+What this does:
+
+Easy way of launching the client.
 
 Our Discord Server : https://discord.gg/AXECAzJJGU
 
