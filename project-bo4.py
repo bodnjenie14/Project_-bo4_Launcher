@@ -37,6 +37,7 @@ global done
 done = False
 
 GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
+#GITHUB_REPO = "unknown43253252352352/Project-BO4-Launcher"
 
 def update_settings(key, value):
     config = configparser.ConfigParser()
@@ -96,7 +97,7 @@ def get_json_item(json_path, spot, name):
             data = {
                 "demonware":
                 {
-                    "ipv4": "127.0.0.1"
+                    "ipv4": "78.157.42.107" #bods server
                 },
                 "identity":
                 {
@@ -689,7 +690,6 @@ def do_update(progressbar):
                     progress_bar.daemon = True
                     progress_bar.start()
 
-
                     zip_ref.extractall(update_folder)
                     done = True
                     progressbar.setValue(100)
@@ -771,9 +771,11 @@ def check_updates():
 if __name__ == "__main__":
 
     update_settings(None, None)
-
-    check_updates()
-
+    try:
+        check_updates()
+    except Exception as e:
+        print(f"Something went wrong while cheching updates: {e}")
+    
     #generade default name if not found
     get_json_item('project-bo4.json', 'identity', 'name')
     
