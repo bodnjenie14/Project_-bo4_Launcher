@@ -73,6 +73,7 @@ def get_settings(key):
     config = configparser.ConfigParser()
     config.read(os.path.join(os.getcwd(), "files", "settings.ini"))
     value = config.get('Launcher Settings', key)
+    print("value")
     print(value)
     return value
 
@@ -441,6 +442,7 @@ class launcher(QWidget):
 
     def start_game(self, which):
         global reshade
+        reshade = str(get_settings("reshade"))
         
         if not os.path.exists(os.path.join("Players", "Mp.cfg")):
             if not os.path.exists("Players"):
@@ -465,9 +467,11 @@ class launcher(QWidget):
             except Exception as E:
                 print(f"Error copying files: {E}")
 
+        print("RESHADE ==== " + str(reshade))
+
         if which == "solo":
             try:
-                if reshade == True:
+                if reshade == "True":
                     path_to_dll = os.path.join(os.getcwd(), "files", "reshade_solo", "powrprof.dll")
                 else:
                     path_to_dll = os.path.join(os.getcwd(), "files", "solo", "d3d11.dll")
@@ -479,7 +483,7 @@ class launcher(QWidget):
 
         elif which == "multi":
             try:
-                if reshade == True:
+                if reshade == "True":
                     path_to_dll = os.path.join(os.getcwd(), "files", "reshade_mp", "powrprof.dll")
                 else:
                     path_to_dll = os.path.join(os.getcwd(), "files", "mp", "d3d11.dll")
@@ -756,7 +760,7 @@ class updater(QWidget):
 def check_updates():
     last = get_last_release_version()
     current = get_settings("link")
-
+    print(last + " last **********************************************************************************************************************************************************************")
     if current == last:
         print("software is uptodate")
         return
