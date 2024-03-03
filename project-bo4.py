@@ -2,7 +2,7 @@ import os
 
 #Remove dll file otherwise it will be injected on start up
 try:
-    files_to_remove = ["d3d11.dll", "powrprof.dll"]
+    files_to_remove = ["d3d11.dll", "UMPDC.dll"]
 
     for file_name in files_to_remove:
         file_path = os.path.join(os.getcwd(), file_name)
@@ -12,7 +12,7 @@ try:
 except Exception as e:
     print(f"Error while removing dll files: {e}")
 
-from PyQt5.QtWidgets import QProgressBar, QApplication, QMessageBox, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
+from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QMessageBox, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
 from PyQt5.QtMultimediaWidgets import QVideoWidget
@@ -283,6 +283,12 @@ def replace_json_value(json_file_path, value, spot, key):
     except Exception as e:
         print(f"Something went wrong while modifying Json file: {e}")
 
+def open_discord():
+    subprocess.Popen(['start', "https://discord.gg/AXECAzJJGU"], shell=True)
+
+def open_wiki():
+    subprocess.Popen(['start', "https://shield-bo4.gitbook.io/"], shell=True)
+
 class launcher(QWidget):
     def __init__(self):
         super().__init__()
@@ -292,6 +298,66 @@ class launcher(QWidget):
         layout = QVBoxLayout()
         self.setWindowTitle('Project-BO4')
         self.setWindowIcon(QIcon(os.path.join('files', 'images', 'exe_icon_bo4.ico')))
+
+        top_row_layout = QHBoxLayout()
+
+        discord_button = QPushButton("")
+
+        pixmap_normal = QPixmap(os.path.join('files', 'images', 'buttons', 'discord-logo.png'))
+        pixmap_hover = QPixmap(os.path.join('files', 'images', 'buttons', 'discord-logo_light.png'))
+
+        icon_normal = QIcon(pixmap_normal)
+        icon_hover = QIcon(pixmap_hover)
+        icon_size = QSize(30, 30) 
+
+        discord_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: transparent;
+                border: none;
+            }
+            """
+        )
+
+        discord_button.setIcon(icon_normal)
+        discord_button.setIconSize(icon_size)
+        discord_button.clicked.connect(open_discord)
+
+        discord_button.enterEvent = lambda event: discord_button.setIcon(icon_hover)
+        discord_button.leaveEvent = lambda event: discord_button.setIcon(icon_normal)
+        
+        top_row_layout.addWidget(discord_button)
+
+        spacer_item = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        top_row_layout.addItem(spacer_item)
+
+
+        help_button = QPushButton("")
+        help_button.clicked.connect(open_wiki)
+
+        help_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: transparent;
+                border: none;
+            }
+            """
+        )
+
+        pixmap_help = QPixmap(os.path.join('files', 'images', 'buttons', 'help.png'))
+        pixmap_help_hover = QPixmap(os.path.join('files', 'images', 'buttons', 'help_light.png'))
+        help_icon = QIcon(pixmap_help)
+        help_icon_hover = QIcon(pixmap_help_hover)
+        icon_size = QSize(40, 40) 
+        help_button.setIcon(help_icon)
+        help_button.setIconSize(icon_size)
+        top_row_layout.addWidget(help_button)
+
+        layout.addLayout(top_row_layout)
+
+        help_button.enterEvent = lambda event: help_button.setIcon(help_icon_hover)
+        help_button.leaveEvent = lambda event: help_button.setIcon(help_icon)
+
         title_layout = QVBoxLayout()
 
         try:
@@ -472,7 +538,7 @@ class launcher(QWidget):
         if which == "solo":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(os.getcwd(), "files", "reshade_solo", "powrprof.dll")
+                    path_to_dll = os.path.join(os.getcwd(), "files", "reshade_solo", "UMPDC.dll")
                 else:
                     path_to_dll = os.path.join(os.getcwd(), "files", "solo", "d3d11.dll")
 
@@ -484,7 +550,7 @@ class launcher(QWidget):
         elif which == "multi":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(os.getcwd(), "files", "reshade_mp", "powrprof.dll")
+                    path_to_dll = os.path.join(os.getcwd(), "files", "reshade_mp", "UMPDC.dll")
                 else:
                     path_to_dll = os.path.join(os.getcwd(), "files", "mp", "d3d11.dll")
 
