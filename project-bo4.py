@@ -42,13 +42,13 @@ GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
 def update_settings(key, value):
     config = configparser.ConfigParser()
     print("settings")
-    if not os.path.exists(os.path.join(os.getcwd(), "files", "settings.ini")):
+    if not os.path.exists(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini")):
         config.add_section('Launcher Settings')
         config.set('Launcher Settings', 'volume', '30')
         config.set('Launcher Settings', 'reshade', 'False')
         config.set('Launcher Settings', 'link', '')
 
-        with open(os.path.join(os.getcwd(), "files", "settings.ini"), 'w') as configfile:
+        with open(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"), 'w') as configfile:
             config.write(configfile)
 
         print("Default INI file 'settings.ini' has been created.")
@@ -58,12 +58,12 @@ def update_settings(key, value):
         print("returned update settings")
         return
 
-    config.read(os.path.join(os.getcwd(), "files", "settings.ini"))
+    config.read(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"))
     print("settings updated")
 
     config.set('Launcher Settings', key, value)
 
-    with open(os.path.join(os.getcwd(), "files", "settings.ini"), 'w') as configfile:
+    with open(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"), 'w') as configfile:
         config.write(configfile)
 
 def get_settings(key):
@@ -71,7 +71,7 @@ def get_settings(key):
 
     print("settings " + key)
     config = configparser.ConfigParser()
-    config.read(os.path.join(os.getcwd(), "files", "settings.ini"))
+    config.read(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"))
     value = config.get('Launcher Settings', key)
     print("value")
     print(value)
@@ -515,7 +515,7 @@ class launcher(QWidget):
                 os.mkdir("Players")
             
             try:
-                path_to_cfg = os.path.join(os.getcwd(), "files", "Players", "Mp.cfg")
+                path_to_cfg = os.path.join(os.getcwd(), "project-bo4", "files", "Players", "Mp.cfg")
                 shutil.copy(path_to_cfg, os.getcwd())
             except Exception as e:
                 print(e)
@@ -527,7 +527,7 @@ class launcher(QWidget):
                 except Exception as e:
                     print(e)
             
-            path_to_lpc = os.path.join(os.getcwd(), "files", "LPC")
+            path_to_lpc = os.path.join(os.getcwd(), "project-bo4", "files", "LPC")
             try:
                 shutil.copytree(path_to_lpc, os.path.join(os.getcwd(), "LPC"))
             except Exception as E:
@@ -538,9 +538,9 @@ class launcher(QWidget):
         if which == "solo":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(os.getcwd(), "files", "reshade_solo", "UMPDC.dll")
+                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "reshade_solo", "UMPDC.dll")
                 else:
-                    path_to_dll = os.path.join(os.getcwd(), "files", "solo", "d3d11.dll")
+                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "solo", "d3d11.dll")
 
                 if os.path.exists(path_to_dll):
                     shutil.copy(path_to_dll, os.getcwd()) 
@@ -550,9 +550,9 @@ class launcher(QWidget):
         elif which == "multi":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(os.getcwd(), "files", "reshade_mp", "UMPDC.dll")
+                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "reshade_mp", "UMPDC.dll")
                 else:
-                    path_to_dll = os.path.join(os.getcwd(), "files", "mp", "d3d11.dll")
+                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "mp", "d3d11.dll")
 
                 if os.path.exists(path_to_dll):
                     shutil.copy(path_to_dll, os.getcwd())
