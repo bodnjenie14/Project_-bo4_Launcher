@@ -235,7 +235,7 @@ class change_ip(QDialog):
         print(f"input {self.input_field.text()}")
 
         empty = False
-        file_path = os.path.join(os.getcwd(), 'files', 'Ip_address.txt') 
+        file_path = os.path.join(os.getcwd(), "project-bo4", 'files', 'Ip_address.txt') 
 
         if not os.path.exists( file_path ):
             with open(file_path, 'w') as file:
@@ -261,7 +261,7 @@ class change_ip(QDialog):
 
     def generade_dropdown_menu(self):
         self.comboBox.clear()
-        file_path = os.path.join(os.getcwd(), 'files', 'Ip_address.txt')
+        file_path = os.path.join(os.getcwd(), "project-bo4", 'files', 'Ip_address.txt')
 
         if not os.path.exists( file_path ):
             with open(file_path, 'w') as file:
@@ -297,14 +297,14 @@ class launcher(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
         self.setWindowTitle('Project-BO4')
-        self.setWindowIcon(QIcon(os.path.join('files', 'images', 'exe_icon_bo4.ico')))
+        self.setWindowIcon(QIcon(os.path.join("project-bo4", 'files', 'images', 'exe_icon_bo4.ico')))
 
         top_row_layout = QHBoxLayout()
 
         discord_button = QPushButton("")
 
-        pixmap_normal = QPixmap(os.path.join('files', 'images', 'buttons', 'discord-logo.png'))
-        pixmap_hover = QPixmap(os.path.join('files', 'images', 'buttons', 'discord-logo_light.png'))
+        pixmap_normal = QPixmap(os.path.join("project-bo4",'files', 'images', 'buttons', 'discord-logo.png'))
+        pixmap_hover = QPixmap(os.path.join("project-bo4", 'files', 'images', 'buttons', 'discord-logo_light.png'))
 
         icon_normal = QIcon(pixmap_normal)
         icon_hover = QIcon(pixmap_hover)
@@ -344,8 +344,8 @@ class launcher(QWidget):
             """
         )
 
-        pixmap_help = QPixmap(os.path.join('files', 'images', 'buttons', 'help.png'))
-        pixmap_help_hover = QPixmap(os.path.join('files', 'images', 'buttons', 'help_light.png'))
+        pixmap_help = QPixmap(os.path.join("project-bo4", 'files', 'images', 'buttons', 'help.png'))
+        pixmap_help_hover = QPixmap(os.path.join("project-bo4", 'files', 'images', 'buttons', 'help_light.png'))
         help_icon = QIcon(pixmap_help)
         help_icon_hover = QIcon(pixmap_help_hover)
         icon_size = QSize(40, 40) 
@@ -361,12 +361,12 @@ class launcher(QWidget):
         title_layout = QVBoxLayout()
 
         try:
-            images_folder = os.path.join(os.getcwd(), 'files', 'images')
+            images_folder = os.path.join(os.getcwd(),"project-bo4", 'files', 'images')
             files = [f for f in os.listdir(images_folder) if f.lower().endswith(('.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png'))]
             random_background = random.choice(files)
 
             if random_background.lower().endswith(('.gif')):
-                self.movie = QMovie(os.path.join(os.getcwd(), 'files', 'images', random_background))
+                self.movie = QMovie(os.path.join(os.getcwd(), "project-bo4", 'files', 'images', random_background))
                 background_label = QLabel(self)
                 layout.addWidget(background_label)
                 background_label.setMovie(self.movie)
@@ -382,7 +382,7 @@ class launcher(QWidget):
 
             elif random_background.lower().endswith(('.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png')):
                 background_label = QLabel(self)
-                background_image = QPixmap(os.path.join(os.getcwd(), 'files', 'images', random_background))
+                background_image = QPixmap(os.path.join(os.getcwd(), "project-bo4", 'files', 'images', random_background))
                 background_label.setPixmap(background_image)
                 background_label.setGeometry(0, 0, background_image.width(), background_image.height())
                 self.setFixedSize(background_image.width(), background_image.height())
@@ -407,7 +407,7 @@ class launcher(QWidget):
                 layout.addLayout(check_box)
 
             try:
-                sound_folder = os.path.join(os.getcwd(), 'files', 'sounds')
+                sound_folder = os.path.join(os.getcwd(), "project-bo4", 'files', 'sounds')
                 sound_files = [f for f in os.listdir(sound_folder) if f.lower().endswith('.mp3')]
                 random_sound_file = random.choice(sound_files)
 
@@ -793,10 +793,10 @@ class updater(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
         self.setWindowTitle('Project-bo4 updater')
-        self.setWindowIcon(QIcon(os.path.join('files', 'images', 'exe_icon_bo4.ico')))
+        self.setWindowIcon(QIcon(os.path.join("project-bo4", 'files', 'images', 'exe_icon_bo4.ico')))
 
         background_label = QLabel(self)
-        background_image = QPixmap(os.path.join(os.getcwd(), 'files', 'images', 'update', "updater_image.jpg"))
+        background_image = QPixmap(os.path.join(os.getcwd(), "project-bo4", 'files', 'images', 'update', "updater_image.jpg"))
         background_label.setPixmap(background_image)
         background_label.setGeometry(0, 0, background_image.width(), background_image.height())
         self.setFixedSize(background_image.width(), background_image.height())
