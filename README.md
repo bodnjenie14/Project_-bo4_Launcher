@@ -11,5 +11,12 @@ Easy way of launching the client.
 
 Our Discord Server : https://discord.gg/AXECAzJJGU
 
+# Compile instructions 
+install python 
+
+pip install pyinstaller
+pip install pyqt5 pyinstaller
+
+pyinstaller --onefile --windowed project-bo4.py
 
 Coded by Unknown Love
