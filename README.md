@@ -13,7 +13,7 @@ Our Discord Server : https://discord.gg/AXECAzJJGU
 
 # Compile instructions 
 install python 
-
+install py installer 5.13 
 pip install pyinstaller
 pip install pyqt5 pyinstaller
 
