@@ -1,25 +1,25 @@
 import os
 
-#Remove dll file otherwise it will be injected on start up
+# Remove DLL file otherwise it will be injected on start up
 try:
     files_to_remove = ["d3d11.dll", "UMPDC.dll"]
-
     for file_name in files_to_remove:
         file_path = os.path.join(os.getcwd(), file_name)
 
         if os.path.exists(file_path):
             os.remove(file_path)
 except Exception as e:
-    print(f"Error while removing dll files: {e}")
+    print(f"Error while removing DLLs: {e}")
 
-from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QMessageBox, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
+from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
-from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtCore import Qt, QUrl, QTimer, QSize
-from PyQt5 import QtCore
-import multiprocessing
+# from PyQt5.QtMultimediaWidgets import QVideoWidget
+from PyQt5.QtCore import Qt, QUrl, QSize
+# from PyQt5 import QtCore
+# import multiprocessing
 import configparser
+import argparse
 import subprocess
 import threading
 import requests
@@ -37,12 +37,26 @@ global done
 done = False
 
 GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
-#GITHUB_REPO = "unknown43253252352352/Project-BO4-Launcher"
+# GITHUB_REPO = "unknown43253252352352/Project-BO4-Launcher"
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Project BO4 Launcher")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--offline", "--solo", action="store_true", help="Start the game offline (solo mode)")
+    group.add_argument("--online", "--multiplayer", action="store_true", help="Start the game offline (solo mode)")
+    args = parser.parse_args()
+    print("Arguments parsed:", args)
+    return args
+
 
 def update_settings(key, value):
     config = configparser.ConfigParser()
     print("settings")
+    
     if not os.path.exists(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini")):
+        os.makedirs(os.path.join(os.getcwd(), "project-bo4", "files"))
+        
         config.add_section('Launcher Settings')
         config.set('Launcher Settings', 'volume', '30')
         config.set('Launcher Settings', 'reshade', 'False')
@@ -54,7 +68,7 @@ def update_settings(key, value):
         print("Default INI file 'settings.ini' has been created.")
         return
     
-    if(key is None or value is None):
+    if key is None or value is None:
         print("returned update settings")
         return
 
@@ -68,7 +82,6 @@ def update_settings(key, value):
 
 def get_settings(key):
     update_settings(None, None)
-
     print("settings " + key)
     config = configparser.ConfigParser()
     config.read(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"))
@@ -561,13 +574,13 @@ class launcher(QWidget):
 
             ip_address = get_json_item('project-bo4.json', 'demonware', 'ipv4')
             if ip_address == "":
-                click = set_ip()
+                click = self.set_ip()
 
                 if click == 0:
                     return
 
                 if ip_address == "" and click == QDialog.Accepted:
-                    start_game("multi")
+                    self.start_game("multi")
                     return
                 else:
                     return
@@ -839,24 +852,33 @@ def check_updates():
     sys.exit(app.exec_())
         
 if __name__ == "__main__":
-
     update_settings(None, None)
+    
     try:
         check_updates()
     except Exception as e:
         print(f"Something went wrong while cheching updates: {e}")
     
-    #generade default name if not found
+    # generade default name if not found
     get_json_item('project-bo4.json', 'identity', 'name')
     
+    args = parse_arguments()
     app = QApplication(sys.argv)
 
     app.setStyle("Fusion")
     palette = app.palette()
     palette.setColor(QPalette.WindowText, Qt.white)
     app.setPalette(palette)
-
-    window = launcher()
-    window.show()
-    sys.exit(app.exec_())
     
+    window = launcher()
+    
+    if args.offline:
+        print("Launching Offline mode (solo mode)")
+        window.start_game("solo")
+    elif args.online:
+        print("Launching Online mode (Multiplayer)")
+        window.start_game("multi")
+    else:
+        print("No args provided")
+        window.show()
+        sys.exit(app.exec_())
