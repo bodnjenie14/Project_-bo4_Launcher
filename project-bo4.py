@@ -34,7 +34,7 @@ for i in FILES_TO_REMOVE:
     except Exception as e:
         print(f"Error while removing {i}: {e}")
 
-from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
+from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate, QMessageBox
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
 from PyQt5.QtCore import Qt, QUrl, QSize
@@ -129,6 +129,18 @@ def get_json_item(json_path, spot, name):
     except Exception as e:
         print(f"Something went wrong while reading json file: {e}")
         
+def missing_dll_exit():
+    app = QApplication([])
+    error_message = QMessageBox()
+    error_message.setStyleSheet("QLabel{ color: black}")
+    error_message.setIcon(QMessageBox.Critical)
+    error_message.text
+    error_message.setText("Missing Project BO4 DLL")
+    error_message.setInformativeText("Couldn't find required DLL files Please visit\nhttps://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender")
+    error_message.setWindowTitle("Error")
+    error_message.exec_()
+    sys.exit()
+
 class change_name(QDialog):
     def __init__(self, parent=None):
         super(change_name, self).__init__(parent)
@@ -593,6 +605,8 @@ class launcher(QWidget):
             except Exception as e:
                 print(f"Error: {e}")
 
+            if (not os.path.exists("d3d11.dll") or os.path.exists("UMPDC.dll")):
+                missing_dll_exit()
             try:
                 process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
