@@ -31,14 +31,14 @@ global done
 done = False
 
 # Remove DLL file otherwise it will be injected on start up
-try:
-    FILES_TO_REMOVE = ["d3d11.dll", "UMPDC.dll"]
-    for i in FILES_TO_REMOVE:
+FILES_TO_REMOVE = ["d3d11.dll", "UMPDC.dll"]
+for i in FILES_TO_REMOVE:
+    try:
         file_path = os.path.join(cwd, i)
         if os.path.exists(file_path):
             os.remove(file_path)
-except Exception as e:
-    print(f"Error while removing DLLs: {e}")
+    except Exception as e:
+        print(f"Error while removing {i}: {e}")
 
 
 def parse_arguments():
