@@ -134,9 +134,9 @@ def missing_dll_exit():
     error_message = QMessageBox()
     error_message.setStyleSheet("QLabel{ color: black}")
     error_message.setIcon(QMessageBox.Critical)
-    error_message.text
-    error_message.setText("Missing Project BO4 DLL")
-    error_message.setInformativeText("Couldn't find required DLL files Please visit\nhttps://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender")
+    error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
+    error_message.setText("Missing Project BO4 DLL\n")
+    error_message.setInformativeText("Couldn't find required DLL files Please visit\nhttps://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender\n")
     error_message.setWindowTitle("Error")
     error_message.exec_()
     sys.exit()
@@ -323,14 +323,14 @@ class launcher(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
         self.setWindowTitle('Project-BO4')
-        self.setWindowIcon(QIcon(os.path.join("project-bo4", 'files', 'images', 'exe_icon_bo4.ico')))
+        self.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
 
         top_row_layout = QHBoxLayout()
 
         discord_button = QPushButton("")
 
-        pixmap_normal = QPixmap(os.path.join("project-bo4",'files', 'images', 'buttons', 'discord-logo.png'))
-        pixmap_hover = QPixmap(os.path.join("project-bo4", 'files', 'images', 'buttons', 'discord-logo_light.png'))
+        pixmap_normal = QPixmap(os.path.join(resources_dir, 'images', 'buttons', 'discord-logo.png'))
+        pixmap_hover = QPixmap(os.path.join(resources_dir, 'images', 'buttons', 'discord-logo_light.png'))
 
         icon_normal = QIcon(pixmap_normal)
         icon_hover = QIcon(pixmap_hover)
@@ -370,8 +370,8 @@ class launcher(QWidget):
             """
         )
 
-        pixmap_help = QPixmap(os.path.join("project-bo4", 'files', 'images', 'buttons', 'help.png'))
-        pixmap_help_hover = QPixmap(os.path.join("project-bo4", 'files', 'images', 'buttons', 'help_light.png'))
+        pixmap_help = QPixmap(os.path.join(resources_dir, 'images', 'buttons', 'help.png'))
+        pixmap_help_hover = QPixmap(os.path.join(resources_dir, 'images', 'buttons', 'help_light.png'))
         help_icon = QIcon(pixmap_help)
         help_icon_hover = QIcon(pixmap_help_hover)
         icon_size = QSize(40, 40) 
@@ -387,12 +387,12 @@ class launcher(QWidget):
         title_layout = QVBoxLayout()
 
         try:
-            images_folder = os.path.join(cwd,"project-bo4", 'files', 'images')
+            images_folder = os.path.join(resources_dir, 'images')
             files = [f for f in os.listdir(images_folder) if f.lower().endswith(('.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png'))]
             random_background = random.choice(files)
 
             if random_background.lower().endswith(('.gif')):
-                self.movie = QMovie(os.path.join(cwd, "project-bo4", 'files', 'images', random_background))
+                self.movie = QMovie(os.path.join(resources_dir, 'images', random_background))
                 background_label = QLabel(self)
                 layout.addWidget(background_label)
                 background_label.setMovie(self.movie)
@@ -408,7 +408,7 @@ class launcher(QWidget):
 
             elif random_background.lower().endswith(('.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png')):
                 background_label = QLabel(self)
-                background_image = QPixmap(os.path.join(cwd, "project-bo4", 'files', 'images', random_background))
+                background_image = QPixmap(os.path.join(resources_dir, 'images', random_background))
                 background_label.setPixmap(background_image)
                 background_label.setGeometry(0, 0, background_image.width(), background_image.height())
                 self.setFixedSize(background_image.width(), background_image.height())
@@ -605,8 +605,9 @@ class launcher(QWidget):
             except Exception as e:
                 print(f"Error: {e}")
 
-            if (not os.path.exists("d3d11.dll") or os.path.exists("UMPDC.dll")):
+            if not(os.path.exists("d3d11.dll") or os.path.exists("UMPDC.dll")): # Get a better way to check for DLLs
                 missing_dll_exit()
+
             try:
                 process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
@@ -821,10 +822,10 @@ class updater(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
         self.setWindowTitle('Project-bo4 updater')
-        self.setWindowIcon(QIcon(os.path.join("project-bo4", 'files', 'images', 'exe_icon_bo4.ico')))
+        self.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
 
         background_label = QLabel(self)
-        background_image = QPixmap(os.path.join(cwd, "project-bo4", 'files', 'images', 'update', "updater_image.jpg"))
+        background_image = QPixmap(os.path.join(resources_dir, 'images', 'update', "updater_image.jpg"))
         background_label.setPixmap(background_image)
         background_label.setGeometry(0, 0, background_image.width(), background_image.height())
         self.setFixedSize(background_image.width(), background_image.height())
