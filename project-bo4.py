@@ -2,10 +2,7 @@ import os
 from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
-# from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtCore import Qt, QUrl, QSize
-# from PyQt5 import QtCore
-# import multiprocessing
 import configparser
 import argparse
 import subprocess
@@ -19,6 +16,7 @@ import time
 import sys
 import socket
 import urllib
+import re
 
 GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
 
@@ -189,6 +187,7 @@ class change_ip(QDialog):
         ip_address = get_json_item('project-bo4.json', 'demonware', 'ipv4')
         if ip_address == "":
             ip_address = "None"
+
 
         self.title = QLabel(f"Select server IP address (Current IP Address: {ip_address})")
 
@@ -508,7 +507,9 @@ class launcher(QWidget):
                 ip_address = ip_address.replace(" ", "")
 
             print(f"Entered IP Address: {ip_address}")
-            if ip_address != "":
+            # IP validation
+            regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+            if(re.search(regex,ip_address)):
                 replace_json_value("project-bo4.json", ip_address, 'demonware', 'ipv4')
 
     def set_name(self):
