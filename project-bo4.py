@@ -1,8 +1,4 @@
 import os
-from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
-from PyQt5.QtCore import Qt, QUrl, QSize
 import configparser
 import argparse
 import subprocess
@@ -18,9 +14,7 @@ import socket
 import urllib
 import re
 
-GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
-
-IP_REGEX = r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+IP_REGEX = r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$" #IP Validation
 
 cwd = os.getcwd()
 resources_dir = os.path.join(cwd, "project-bo4", "files")
@@ -40,6 +34,12 @@ for i in FILES_TO_REMOVE:
     except Exception as e:
         print(f"Error while removing {i}: {e}")
 
+from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
+from PyQt5.QtCore import Qt, QUrl, QSize
+
+GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Project BO4 Launcher")
@@ -509,7 +509,7 @@ class launcher(QWidget):
                 ip_address = ip_address.replace(" ", "")
 
             print(f"Entered IP Address: {ip_address}")
-            if re.search(IP_REGEX, ip_address) != None:
+            if re.search(IP_REGEX, ip_address):
                 replace_json_value("project-bo4.json", ip_address, 'demonware', 'ipv4')
 
     def set_name(self):
