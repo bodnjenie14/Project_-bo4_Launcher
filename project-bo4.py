@@ -1,16 +1,4 @@
 import os
-
-# Remove DLL file otherwise it will be injected on start up
-try:
-    files_to_remove = ["d3d11.dll", "UMPDC.dll"]
-    for file_name in files_to_remove:
-        file_path = os.path.join(os.getcwd(), file_name)
-
-        if os.path.exists(file_path):
-            os.remove(file_path)
-except Exception as e:
-    print(f"Error while removing DLLs: {e}")
-
 from PyQt5.QtWidgets import QSpacerItem, QProgressBar, QApplication, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QDialog, QStyle, QCheckBox, QSlider, QSizePolicy, QComboBox, QStyledItemDelegate
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap, QIcon, QMovie, QPalette
@@ -29,15 +17,28 @@ import random
 import json
 import time
 import sys
-
 import socket
 import urllib
+
+GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
+
+cwd = os.getcwd()
+resources_dir = os.path.join(cwd, "project-bo4", "files")
+settings_file = os.path.join(cwd, resources_dir, "settings.ini")
+server_ip_file = os.path.join(cwd, resources_dir, "Ip_address.txt")
 
 global done
 done = False
 
-GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
-# GITHUB_REPO = "unknown43253252352352/Project-BO4-Launcher"
+# Remove DLL file otherwise it will be injected on start up
+try:
+    FILES_TO_REMOVE = ["d3d11.dll", "UMPDC.dll"]
+    for i in FILES_TO_REMOVE:
+        file_path = os.path.join(cwd, i)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+except Exception as e:
+    print(f"Error while removing DLLs: {e}")
 
 
 def parse_arguments():
@@ -49,20 +50,19 @@ def parse_arguments():
     print("Arguments parsed:", args)
     return args
 
-
 def update_settings(key, value):
     config = configparser.ConfigParser()
     print("settings")
-    
-    if not os.path.exists(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini")):
-        os.makedirs(os.path.join(os.getcwd(), "project-bo4", "files"))
+
+    if not os.path.exists(settings_file):
+        os.makedirs(settings_file)
         
         config.add_section('Launcher Settings')
         config.set('Launcher Settings', 'volume', '30')
         config.set('Launcher Settings', 'reshade', 'False')
         config.set('Launcher Settings', 'link', '')
 
-        with open(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"), 'w') as configfile:
+        with open(settings_file), 'w' as configfile:
             config.write(configfile)
 
         print("Default INI file 'settings.ini' has been created.")
@@ -72,19 +72,19 @@ def update_settings(key, value):
         print("returned update settings")
         return
 
-    config.read(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"))
+    config.read(settings_file)
     print("settings updated")
 
     config.set('Launcher Settings', key, value)
 
-    with open(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"), 'w') as configfile:
+    with open(settings_file, 'w') as configfile:
         config.write(configfile)
 
 def get_settings(key):
     update_settings(None, None)
     print("settings " + key)
     config = configparser.ConfigParser()
-    config.read(os.path.join(os.getcwd(), "project-bo4", "files", "settings.ini"))
+    config.read(settings_file)
     value = config.get('Launcher Settings', key)
     print("value")
     print(value)
@@ -203,7 +203,7 @@ class change_ip(QDialog):
         input_layout.addWidget(self.input_field) 
 
         self.add_button = QPushButton("Add") 
-        self.add_button.clicked.connect(self.add_value) 
+        self.add_button.clicked.connect(self.add_server_ip) 
         input_layout.addWidget(self.add_button) 
         
         layout.addLayout(input_layout)  
@@ -244,11 +244,11 @@ class change_ip(QDialog):
             }
         """)
 
-    def add_value(self):
+    def add_server_ip(self):
         print(f"input {self.input_field.text()}")
 
         empty = False
-        file_path = os.path.join(os.getcwd(), "project-bo4", 'files', 'Ip_address.txt') 
+        file_path = server_ip_file
 
         if not os.path.exists( file_path ):
             with open(file_path, 'w') as file:
@@ -274,7 +274,7 @@ class change_ip(QDialog):
 
     def generade_dropdown_menu(self):
         self.comboBox.clear()
-        file_path = os.path.join(os.getcwd(), "project-bo4", 'files', 'Ip_address.txt')
+        file_path = server_ip_file
 
         if not os.path.exists( file_path ):
             with open(file_path, 'w') as file:
@@ -374,12 +374,12 @@ class launcher(QWidget):
         title_layout = QVBoxLayout()
 
         try:
-            images_folder = os.path.join(os.getcwd(),"project-bo4", 'files', 'images')
+            images_folder = os.path.join(cwd,"project-bo4", 'files', 'images')
             files = [f for f in os.listdir(images_folder) if f.lower().endswith(('.gif', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png'))]
             random_background = random.choice(files)
 
             if random_background.lower().endswith(('.gif')):
-                self.movie = QMovie(os.path.join(os.getcwd(), "project-bo4", 'files', 'images', random_background))
+                self.movie = QMovie(os.path.join(cwd, "project-bo4", 'files', 'images', random_background))
                 background_label = QLabel(self)
                 layout.addWidget(background_label)
                 background_label.setMovie(self.movie)
@@ -395,7 +395,7 @@ class launcher(QWidget):
 
             elif random_background.lower().endswith(('.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png')):
                 background_label = QLabel(self)
-                background_image = QPixmap(os.path.join(os.getcwd(), "project-bo4", 'files', 'images', random_background))
+                background_image = QPixmap(os.path.join(cwd, "project-bo4", 'files', 'images', random_background))
                 background_label.setPixmap(background_image)
                 background_label.setGeometry(0, 0, background_image.width(), background_image.height())
                 self.setFixedSize(background_image.width(), background_image.height())
@@ -420,7 +420,7 @@ class launcher(QWidget):
                 layout.addLayout(check_box)
 
             try:
-                sound_folder = os.path.join(os.getcwd(), "project-bo4", 'files', 'sounds')
+                sound_folder = os.path.join(cwd, "project-bo4", 'files', 'sounds')
                 sound_files = [f for f in os.listdir(sound_folder) if f.lower().endswith('.mp3')]
                 random_sound_file = random.choice(sound_files)
 
@@ -528,21 +528,21 @@ class launcher(QWidget):
                 os.mkdir("Players")
             
             try:
-                path_to_cfg = os.path.join(os.getcwd(), "project-bo4", "files", "Players", "Mp.cfg")
-                shutil.copy(path_to_cfg, os.getcwd())
+                path_to_cfg = os.path.join(resources_dir, "Players", "Mp.cfg")
+                shutil.copy(path_to_cfg, cwd)
             except Exception as e:
                 print(e)
 
-        if not os.path.exists(os.path.join(os.getcwd(), "LPC", ".manifest")) or not os.path.exists(os.path.join(os.getcwd(), "LPC", "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff")) or not os.path.exists(os.path.join(os.getcwd(), "LPC", "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")):
-            if os.path.exists(os.path.join(os.getcwd(), "LPC")):
+        if not os.path.exists(os.path.join(cwd, "LPC", ".manifest")) or not os.path.exists(os.path.join(cwd, "LPC", "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff")) or not os.path.exists(os.path.join(cwd, "LPC", "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")):
+            if os.path.exists(os.path.join(cwd, "LPC")):
                 try:
-                    shutil.rmtree(os.path.join(os.getcwd(), "LPC"))
+                    shutil.rmtree(os.path.join(cwd, "LPC"))
                 except Exception as e:
                     print(e)
             
-            path_to_lpc = os.path.join(os.getcwd(), "project-bo4", "files", "LPC")
+            path_to_lpc = os.path.join(cwd, resources_dir, "LPC")
             try:
-                shutil.copytree(path_to_lpc, os.path.join(os.getcwd(), "LPC"))
+                shutil.copytree(path_to_lpc, os.path.join(cwd, "LPC"))
             except Exception as E:
                 print(f"Error copying files: {E}")
 
@@ -551,24 +551,24 @@ class launcher(QWidget):
         if which == "solo":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "reshade_solo", "UMPDC.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_solo", "UMPDC.dll")
                 else:
-                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "solo", "d3d11.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "solo", "d3d11.dll")
 
                 if os.path.exists(path_to_dll):
-                    shutil.copy(path_to_dll, os.getcwd()) 
+                    shutil.copy(path_to_dll, cwd) 
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
         elif which == "multi":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "reshade_mp", "UMPDC.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_mp", "UMPDC.dll")
                 else:
-                    path_to_dll = os.path.join(os.getcwd(), "project-bo4", "files", "mp", "d3d11.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "mp", "d3d11.dll")
 
                 if os.path.exists(path_to_dll):
-                    shutil.copy(path_to_dll, os.getcwd())
+                    shutil.copy(path_to_dll, cwd)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -593,7 +593,7 @@ class launcher(QWidget):
                 print(f"Error: {e}")
 
             try:
-                process = subprocess.Popen(["BlackOps4.exe"])
+                process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
             except Exception as e:
                 print(f"Error: {e}")
@@ -745,7 +745,7 @@ def do_update(progressbar):
 
         file_size = get_download_size(last)
 
-        download_path = os.path.join(os.getcwd(), last.split("/")[-1] )
+        download_path = os.path.join(cwd, last.split("/")[-1] )
         absolute_path = os.path.abspath(download_path)
 
         progress_bar = threading.Thread(target=set_progress_bar, args=(progressbar, file_size, download_path))
@@ -756,7 +756,7 @@ def do_update(progressbar):
             download_file(last, download_path)
             done = True
 
-            update_folder = os.path.join(os.getcwd(), "update_folder")
+            update_folder = os.path.join(cwd, "update_folder")
             if os.path.exists( update_folder ):
                 try:
                     shutil.rmtree( update_folder )
@@ -785,7 +785,7 @@ def do_update(progressbar):
         except Exception as e:
             print(f"General Error: {e}")
 
-        update_script = create_update_script(os.getcwd(), update_folder, "project-bo4.exe")
+        update_script = create_update_script(cwd, update_folder, "project-bo4.exe")
         
         try:
             subprocess.run(['cmd', '/C', 'start', '', fr'{update_script}'], shell=True)
@@ -809,7 +809,7 @@ class updater(QWidget):
         self.setWindowIcon(QIcon(os.path.join("project-bo4", 'files', 'images', 'exe_icon_bo4.ico')))
 
         background_label = QLabel(self)
-        background_image = QPixmap(os.path.join(os.getcwd(), "project-bo4", 'files', 'images', 'update', "updater_image.jpg"))
+        background_image = QPixmap(os.path.join(cwd, "project-bo4", 'files', 'images', 'update', "updater_image.jpg"))
         background_label.setPixmap(background_image)
         background_label.setGeometry(0, 0, background_image.width(), background_image.height())
         self.setFixedSize(background_image.width(), background_image.height())
