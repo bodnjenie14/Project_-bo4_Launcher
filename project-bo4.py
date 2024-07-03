@@ -136,9 +136,10 @@ def missing_dll_exit():
     error_message.setIcon(QMessageBox.Critical)
     error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
     error_message.setText("Missing Project BO4 DLL\n")
-    error_message.setInformativeText("Couldn't find required DLL files Please visit\nhttps://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender\n")
+    error_message.setInformativeText("Couldn't find required DLL files, you may need to adjust your antivirus settings. Please read the Shield Documentation")
     error_message.setWindowTitle("Error")
     error_message.exec_()
+    subprocess.Popen(['start', "https://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender"], shell=True)
     sys.exit()
 
 class change_name(QDialog):
