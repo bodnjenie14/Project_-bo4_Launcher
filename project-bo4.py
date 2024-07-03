@@ -20,6 +20,8 @@ import re
 
 GITHUB_REPO = "bodnjenie14/Project_-bo4_Launcher"
 
+IP_REGEX = r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+
 cwd = os.getcwd()
 resources_dir = os.path.join(cwd, "project-bo4", "files")
 settings_file = os.path.join(cwd, resources_dir, "settings.ini")
@@ -255,7 +257,7 @@ class change_ip(QDialog):
 
         input_text = file_path.rstrip('\n')
 
-        if self.input_field.text() != "":
+        if re.search(IP_REGEX, self.input_field.text()):
 
             with open(file_path, 'r') as file:
                 lines = file.readlines()
@@ -507,9 +509,7 @@ class launcher(QWidget):
                 ip_address = ip_address.replace(" ", "")
 
             print(f"Entered IP Address: {ip_address}")
-            # IP validation
-            regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
-            if(re.search(regex,ip_address)):
+            if re.search(IP_REGEX, ip_address) != None:
                 replace_json_value("project-bo4.json", ip_address, 'demonware', 'ipv4')
 
     def set_name(self):
