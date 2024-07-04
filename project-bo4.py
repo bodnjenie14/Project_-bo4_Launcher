@@ -303,7 +303,7 @@ class change_ip(QDialog):
             error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
             error_message.setText("Couldn't add IP Addesss")
             error_message.setInformativeText("The IP Address was not vaild")
-            error_message.setWindowTitle("Informaion")
+            error_message.setWindowTitle("Information")
             error_message.exec_()
 
     def generade_dropdown_menu(self):
