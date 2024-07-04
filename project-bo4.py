@@ -136,11 +136,20 @@ def missing_dll_exit():
     error_message.setIcon(QMessageBox.Critical)
     error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
     error_message.setText("Missing Project BO4 DLL\n")
-    error_message.setInformativeText("Couldn't find required DLL files, you may need to adjust your antivirus settings. Please read the Shield Documentation")
+    error_message.setInformativeText("Couldn't find required DLL files, you may need to adjust your antivirus settings.\n\nPlease read the Shield Documentation")
     error_message.setWindowTitle("Error")
     error_message.exec_()
     subprocess.Popen(['start', "https://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender"], shell=True)
     sys.exit()
+
+def CleanIpFile(file_path):  # Probably a better way to do this
+    with open(file_path, "r+") as f: 
+        lines = f.readlines()
+        f.seek(0)
+        f.truncate()
+        for line in lines:
+            if re.search(IP_REGEX, line.strip("\n")):
+                f.write(line)
 
 class change_name(QDialog):
     def __init__(self, parent=None):
@@ -285,6 +294,15 @@ class change_ip(QDialog):
                     file.write(f"{self.input_field.text()}\n")
             
             self.generade_dropdown_menu()
+        else:
+            error_message = QMessageBox()
+            error_message.setStyleSheet("QLabel{ color: black}")
+            error_message.setIcon(QMessageBox.Information)
+            error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
+            error_message.setText("Couldn't add IP Addesss")
+            error_message.setInformativeText("The IP Address was not vaild")
+            error_message.setWindowTitle("Informaion")
+            error_message.exec_()
 
     def generade_dropdown_menu(self):
         self.comboBox.clear()
@@ -293,6 +311,8 @@ class change_ip(QDialog):
         if not os.path.exists( file_path ):
             with open(file_path, 'w') as file:
                 file.write(f"Empty\n")
+        
+        CleanIpFile(file_path)
 
         with open(file_path, 'r') as file:
             for line in file:
