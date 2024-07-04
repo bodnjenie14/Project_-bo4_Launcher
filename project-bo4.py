@@ -149,7 +149,7 @@ def CleanIpFile(file_path):  # Probably a better way to do this
         lines = f.readlines()
         f.seek(0)
         f.truncate()
-        for line in lines:
+        for line in set(lines):
             if re.search(IP_REGEX, line.strip("\n")):
                 f.write(line)
 
