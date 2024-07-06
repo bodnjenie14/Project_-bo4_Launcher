@@ -55,18 +55,15 @@ def update_settings(key, value):
     print("settings")
 
     if not os.path.exists(settings_file):
-        os.makedirs(settings_file)
-        
-        config.add_section('Launcher Settings')
-        config.set('Launcher Settings', 'volume', '30')
-        config.set('Launcher Settings', 'reshade', 'False')
-        config.set('Launcher Settings', 'link', '')
-
-        with open(settings_file), 'w' as configfile:
+        with open(settings_file , 'w') as configfile:
+            config.add_section('Launcher Settings')
+            config.set('Launcher Settings', 'volume', '30')
+            config.set('Launcher Settings', 'reshade', 'False')
+            config.set('Launcher Settings', 'link', '')
             config.write(configfile)
 
-        print("Default INI file 'settings.ini' has been created.")
-        return
+            print("Default INI file 'settings.ini' has been created.")
+            return
     
     if key is None or value is None:
         print("returned update settings")
