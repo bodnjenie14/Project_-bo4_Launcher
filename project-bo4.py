@@ -55,6 +55,7 @@ def update_settings(key, value):
     print("settings")
 
     if not os.path.exists(settings_file):
+        os.makedirs(os.path.join(os.getcwd(), "project-bo4", "files"))
         with open(settings_file , 'w') as configfile:
             config.add_section('Launcher Settings')
             config.set('Launcher Settings', 'volume', '30')
@@ -565,6 +566,14 @@ class launcher(QWidget):
                 shutil.copy(path_to_cfg, cwd)
             except Exception as e:
                 print(e)
+
+        # lpc_dir = os.path.join(cwd, "LPC")
+        # lpc_files = [os.path.join(lpc_dir, ".manifest"), os.path.join(lpc_dir, "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff"), os.path.join(lpc_dir, "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")]
+        # for lpc_file in lpc_files:
+        #     if os.path.exists(lpc_file):
+        #         pass
+        #     else:
+
 
         if not os.path.exists(os.path.join(cwd, "LPC", ".manifest")) or not os.path.exists(os.path.join(cwd, "LPC", "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff")) or not os.path.exists(os.path.join(cwd, "LPC", "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")):
             if os.path.exists(os.path.join(cwd, "LPC")):
