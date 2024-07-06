@@ -567,26 +567,32 @@ class launcher(QWidget):
             except Exception as e:
                 print(e)
 
-        # lpc_dir = os.path.join(cwd, "LPC")
-        # lpc_files = [os.path.join(lpc_dir, ".manifest"), os.path.join(lpc_dir, "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff"), os.path.join(lpc_dir, "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")]
-        # for lpc_file in lpc_files:
-        #     if os.path.exists(lpc_file):
-        #         pass
-        #     else:
-
-
-        if not os.path.exists(os.path.join(cwd, "LPC", ".manifest")) or not os.path.exists(os.path.join(cwd, "LPC", "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff")) or not os.path.exists(os.path.join(cwd, "LPC", "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")):
-            if os.path.exists(os.path.join(cwd, "LPC")):
-                try:
-                    shutil.rmtree(os.path.join(cwd, "LPC"))
-                except Exception as e:
-                    print(e)
-            
-            path_to_lpc = os.path.join(cwd, resources_dir, "LPC")
+        path_to_lpc = os.path.join(cwd, resources_dir, "LPC")
+        if os.path.exists(os.path.join(cwd, "LPC")):
+            for lpc_file in os.listdir(path_to_lpc):
+                    if not os.path.exists(cwd, "LPC", lpc_file):
+                        try:
+                            shutil.copyfile(lpc_file, os.path.join(cwd, "LPC"))
+                        except Exception as e:
+                            print(f"Error copying files: {e}")
+        else:
             try:
                 shutil.copytree(path_to_lpc, os.path.join(cwd, "LPC"))
-            except Exception as E:
-                print(f"Error copying files: {E}")
+            except Exception as e:
+                print(f"Error copying files: {e}")
+
+        # if not os.path.exists(os.path.join(cwd, "LPC", ".manifest")) or not os.path.exists(os.path.join(cwd, "LPC", "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff")) or not os.path.exists(os.path.join(cwd, "LPC", "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")):
+        #     if os.path.exists(os.path.join(cwd, "LPC")):
+        #         try:
+        #             shutil.rmtree(os.path.join(cwd, "LPC"))
+        #         except Exception as e:
+        #             print(e)
+            
+        #     path_to_lpc = os.path.join(cwd, resources_dir, "LPC")
+        #     try:
+        #         shutil.copytree(path_to_lpc, os.path.join(cwd, "LPC"))
+        #     except Exception as E:
+        #         print(f"Error copying files: {E}")
 
         print("RESHADE ==== " + str(reshade))
 
