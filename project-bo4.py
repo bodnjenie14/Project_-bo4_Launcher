@@ -568,7 +568,7 @@ class launcher(QWidget):
                 print(e)
 
         path_to_lpc = os.path.join(resources_dir, "LPC")
-        path_to_game_lpc = os.path.join(os.path.join(cwd, "LPC"))
+        path_to_game_lpc = os.path.join(cwd, "LPC")
         if os.path.exists(path_to_game_lpc):
             for lpc_file in os.listdir(path_to_lpc):
                 current_game_lpc = os.path.join(path_to_game_lpc, lpc_file)
