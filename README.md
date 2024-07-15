@@ -17,6 +17,6 @@ install py installer 5.13
 pip install pyinstaller
 pip install pyqt5 pyinstaller
 
-pyinstaller --onefile --windowed --icon="D:\python\files\images\exe_icon_bo4.ico" --noconfirm project-bo4.py
+pyinstaller --onefile --windowed --icon="project-bo4\files\images\exe_icon_bo4.ico" --noconfirm project-bo4.py
 
 Coded by Unknown Love
