@@ -1,0 +1,377 @@
+{
+    "name": "T8ShieldSupport",
+    "data": [
+        {
+            "type": "stringtable",
+            "name": "gamedata/shield/rankutils/maxrankdata_mp.csv",
+            "path": "Data/maxrankdata_mp.csv"
+        },
+        {
+            "type": "stringtable",
+            "name": "gamedata/shield/rankutils/maxrankdata_wz.csv",
+            "path": "Data/maxrankdata_wz.csv"
+        },
+        {
+            "type": "stringtable",
+            "name": "gamedata/shield/rankutils/maxrankdata_zm.csv",
+            "path": "Data/maxrankdata_zm.csv"
+        },
+
+        {
+            "type": "stringtable",
+            "name": "gamedata/shield/randomutils/mp_randombots.csv",
+            "path": "Data/mp_randombots.csv"
+        },
+        {
+            "type": "stringtable",
+            "name": "gamedata/shield/randomutils/mp_randombots_camos.csv",
+            "path": "Data/mp_randombots_camos.csv"
+        },
+
+
+        {
+            "type": "scriptparsetree",
+            "name": "scripts/core_common/SupportGSC.gsc",
+            "path": "SupportGSC.gsic",
+            "hooks": [
+                "scripts/core_common/load_shared.gsc"
+            ]
+        },
+        {
+            "type": "scriptparsetree",
+            "name": "scripts/core_common/SupportCSC.csc",
+            "path": "SupportCSC.csic",
+            "hooks": [
+                "scripts/core_common/load_shared.csc"
+            ]
+        },
+
+        {
+            "type": "luafile",
+            "name": "ui/shield/FrontHelper",
+            "path": "FrontHelper.luac",
+            "hooks_post": [
+                "x64:4ed0bcba9d999e0f"
+            ]
+        },
+
+        {
+            "type": "luafile",
+            "name": "ui/shield/GameHelper",
+            "path": "GameHelper.luac",
+            "hooks_post": [
+                "x64:46f417a74d9ab424"
+            ]
+        },
+        {
+            "type": "luafile",
+            "name": "ui/shield/GameHelper",
+            "path": "GameHelper.luac",
+            "hooks_post": [
+                "x64:57d27ab8e2f7a9d0"
+            ]
+        },
+        
+        {
+            "type": "stringtable",
+            "name": "gamedata/shield/support_errors.csv",
+            "path": "SupportUtils\\SupportErrors.tsv",
+            "separator": "\t"
+        },
+        {
+            "type": "hashes",
+            "path": "SupportUtils\\SupportStrings.txt",
+            "format": "string",
+            "ignore_error": true
+        },
+        {
+            "type": "hashes",
+            "path": "SupportUtils\\SupportHashes.txt",
+            "format": "serious_compiler",
+            "ignore_error": true
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "hash_65ac0bdfc731aeda",
+            "value": "Welcome to Shield Client, Connected!"
+        },
+        {
+            "type": "localizeentry",
+            "name": "hash_6959976d30a883cb",
+            "value": "Connecting to Server IP..."
+        },
+        {
+            "type": "localizeentry",
+            "name": "hash_b6154c132fda6ee",
+            "value": "Could not connect to the Server!. Make sure Demonware IP is correct in Shield's JSON!"
+        },
+        {
+            "type": "localizeentry",
+            "name": "hash_17dbbb9c5e6880ac",
+            "value": "&&1 has been banned from playing on this Shield Server!"
+        },
+        {
+            "type": "localizeentry",
+            "name": "hash_5aa949e6b34e89ea",
+            "value": "You have been disconnected from the Shield Server! (Restart the Game to Reconnect...)"
+        },
+        
+        {
+            "type": "localizeentry",
+            "name": "shield/custombutton",
+            "value": "Custom Shield Button"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/launchgame",
+            "value": "Launch Game"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/lobbypubs",
+            "value": "Shield Public Lobbies"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/lobbyone",
+            "value": "Lobby One"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/prestige_master",
+            "value": "Prestige Master Activated!"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/use_wz_alts",
+            "value": "Blackout Map"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/use_wz_alts_desc",
+            "value": "Changes Blackout Maps (Must be Host)"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/use_wz_def",
+            "value": "Default Map"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/use_wz_alts_other",
+            "value": "Alcatraz Map"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/use_wz_alts_other_night",
+            "value": "Alcatraz Map (Night)"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/ui_colors_setting",
+            "value": "UI Colors"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/Green",
+            "value": "^2Color Green"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/Blue",
+            "value": "^5Color Blue"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/Red",
+            "value": "^1Color Red"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/Default_Color",
+            "value": "Default Color"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_all",
+            "value": "Unlock All"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_all_desc",
+            "value": "Unlocks Everything in All Gamemodes"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_attch",
+            "value": "Unlock Attachments"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_attch_desc",
+            "value": "Unlocks All Weapon's Attachments"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_loot",
+            "value": "Unlock Loot"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_loot_desc",
+            "value": "Unlocks Loot and Sets Max Elixirs in Zombies"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_camos",
+            "value": "Unlock Camos/Cards"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_camos_desc",
+            "value": "Unlocks All Weapon's Camos and All Calling Cards"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_items",
+            "value": "Unlock Items"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlock_items_desc",
+            "value": "Unlocks All Weapons, and Some Other Stuff"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlockclassslots",
+            "value": "Unlock Class Slots"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/unlockclassslots_desc",
+            "value": "Unlocks The Extra Class Slots in Multiplayer (12 Class Slots in Total)"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/f_unlockall",
+            "value": "Unlock All Options"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/e_unlockall",
+            "value": "Unlock All Enabled"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/d_unlockall",
+            "value": "Unlock All Disabled"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/serverbrowser",
+            "value": "^2Server Browser"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/servers",
+            "value": "^1Servers"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/server1",
+            "value": "^3Public Server 1 (Hosted by BodNJenie)"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/server2",
+            "value": "^3Public Server 2 (Hosted by ????)"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/prestige",
+            "value": "Prestige Activated!"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/fresh_start",
+            "value": "Fresh Start Activated!"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/bothard",
+            "value": "Hard Mode"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/bothard_desc",
+            "value": "Adds an Extra Bots (18 in Total if with All Bots), and Sets the Extra Bots to a Very Hard Mode"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/settings_tab",
+            "value": "Shield Settings"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/ip_notice",
+            "value": "IP has been Set! (Make sure to Restart the Game to Reconnect!)"
+        },
+
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist",
+            "value": "Aim Assist"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_desc",
+            "value": "Enables Aim Assist with Controllers"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_lock",
+            "value": "Aim Assist: Lock-on"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_lock_desc",
+            "value": "Enables Aim Assist Lock-on, (Note: Only for Zombies Mode)"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_slow",
+            "value": "Aim Assist: Slowdown"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_slow_desc",
+            "value": "Enables Aim Assist Slowdown when Aiming"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_closetarget",
+            "value": "Aim Assist: Aim Closest Target"
+        },
+        {
+            "type": "localizeentry",
+            "name": "shield/aimassist_closetarget_desc",
+            "value": "Target the closest AI based on 3d distance, (Note: Only for Zombies Mode)"
+        }
+    ],
+
+
+    "cache": [
+        
+    ]
+}
