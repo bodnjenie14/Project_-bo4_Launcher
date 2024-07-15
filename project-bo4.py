@@ -144,10 +144,10 @@ def missing_dll_exit():
 
 def CleanIpFile(file_path):  # Probably a better way to do this
     with open(file_path, "r+") as f: 
-        lines = f.readlines()
+        lines = set(f.readlines())
         f.seek(0)
         f.truncate()
-        for line in set(lines):
+        for line in lines:
             if re.search(IP_REGEX, line.strip("\n")):
                 f.write(line)
 
@@ -589,24 +589,24 @@ class launcher(QWidget):
         if which == "solo":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_solo", "UMPDC.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_solo.zip")
                 else:
-                    path_to_dll = os.path.join(cwd, resources_dir, "solo", "d3d11.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "solo.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.copy(path_to_dll, cwd) 
+                    shutil.unpack_archive(path_to_dll)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
         elif which == "multi":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_mp", "UMPDC.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_mp.zip")
                 else:
-                    path_to_dll = os.path.join(cwd, resources_dir, "mp", "d3d11.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "mp.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.copy(path_to_dll, cwd)
+                    shutil.unpack_archive(path_to_dll)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -636,6 +636,12 @@ class launcher(QWidget):
             try:
                 process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
+                for i in FILES_TO_REMOVE:
+                    if os.path.exists(i):
+                        try:
+                            os.remove(i)
+                        except Exception:
+                            print("Failed to remove Project-Bo4 Dll.")
             except Exception as e:
                 print(f"Error: {e}")
 
