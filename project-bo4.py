@@ -642,6 +642,7 @@ class launcher(QWidget):
                             os.remove(i)
                         except Exception:
                             print("Failed to remove Project-Bo4 Dll.")
+
             except Exception as e:
                 print(f"Error: {e}")
 
