@@ -21,9 +21,6 @@ resources_dir = os.path.join(cwd, "project-bo4", "files")
 settings_file = os.path.join(cwd, resources_dir, "settings.ini")
 server_ip_file = os.path.join(cwd, resources_dir, "Ip_address.txt")
 
-global done
-done = False
-
 # Remove DLL file otherwise it will be injected on start up
 FILES_TO_REMOVE = ["d3d11.dll", "UMPDC.dll"]
 for i in FILES_TO_REMOVE:
@@ -134,7 +131,7 @@ def missing_dll_exit():
     error_message.setStyleSheet("QLabel{ color: black}")
     error_message.setIcon(QMessageBox.Critical)
     error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
-    error_message.setText("Missing Project BO4 DLL".ljust(75))  #Questionable fix for width
+    error_message.setText("Missing Project BO4 DLL".ljust(75))  # Questionable fix for width
     error_message.setInformativeText("Couldn't find required DLL files, you may need to adjust your antivirus settings.\n\nPlease read the Shield Documentation.\n")
     error_message.setStandardButtons(QMessageBox.Help | QMessageBox.Ok)
     error_message.setDefaultButton(QMessageBox.Help)
@@ -142,7 +139,7 @@ def missing_dll_exit():
         subprocess.Popen(['start', "https://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender"], shell=True)
     sys.exit()
 
-def CleanIpFile(file_path):  # Probably a better way to do this
+def clean_ip_file(file_path):  # Probably a better way to do this
     with open(file_path, "r+") as f: 
         lines = set(f.readlines())
         f.seek(0)
@@ -150,6 +147,16 @@ def CleanIpFile(file_path):  # Probably a better way to do this
         for line in lines:
             if re.search(IP_REGEX, line.strip("\n")):
                 f.write(line)
+
+def remove_old_dll_directories(): # Old DLL Directories
+    OLD_DIRS = ["reshade_solo", "reshade_mp", "solo", "mp"]
+    for i in OLD_DIRS:
+        old_dir_path = os.path.join(resources_dir, i)
+        if os.path.exists(old_dir_path):
+            try:
+                shutil.rmtree(old_dir_path)
+            except Exception as e:
+                print(f"Error removing {i}: {e}")
 
 class change_name(QDialog):
     def __init__(self, parent=None):
@@ -312,7 +319,7 @@ class change_ip(QDialog):
             with open(file_path, 'w') as file:
                 file.write(f"Empty\n")
         
-        CleanIpFile(file_path)
+        clean_ip_file(file_path)
 
         with open(file_path, 'r') as file:
             for line in file:
@@ -907,6 +914,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Something went wrong while cheching updates: {e}")
     
+    remove_old_dll_directories()
+
     # generade default name if not found
     get_json_item('project-bo4.json', 'identity', 'name')
     
