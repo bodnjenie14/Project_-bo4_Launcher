@@ -52,7 +52,7 @@ def update_settings(key, value):
     print("settings")
 
     if not os.path.exists(settings_file):
-        os.makedirs(os.path.join(os.getcwd(), "project-bo4", "files"))
+        os.makedirs(os.path.join("project-bo4", "files"), exist_ok=True)
         with open(settings_file , 'w') as configfile:
             config.add_section('Launcher Settings')
             config.set('Launcher Settings', 'volume', '30')
