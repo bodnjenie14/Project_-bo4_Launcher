@@ -21,9 +21,6 @@ resources_dir = os.path.join(cwd, "project-bo4", "files")
 settings_file = os.path.join(cwd, resources_dir, "settings.ini")
 server_ip_file = os.path.join(cwd, resources_dir, "Ip_address.txt")
 
-global done
-done = False
-
 # Remove DLL file otherwise it will be injected on start up
 FILES_TO_REMOVE = ["d3d11.dll", "UMPDC.dll"]
 for i in FILES_TO_REMOVE:
@@ -55,6 +52,7 @@ def update_settings(key, value):
     print("settings")
 
     if not os.path.exists(settings_file):
+        os.makedirs(os.path.join("project-bo4", "files"), exist_ok=True)
         with open(settings_file , 'w') as configfile:
             config.add_section('Launcher Settings')
             config.set('Launcher Settings', 'volume', '30')
@@ -133,7 +131,7 @@ def missing_dll_exit():
     error_message.setStyleSheet("QLabel{ color: black}")
     error_message.setIcon(QMessageBox.Critical)
     error_message.setWindowIcon(QIcon(os.path.join(resources_dir, 'images', 'exe_icon_bo4.ico')))
-    error_message.setText("Missing Project BO4 DLL".ljust(75))  #Questionable fix for width
+    error_message.setText("Missing Project BO4 DLL".ljust(75))  # Questionable fix for width
     error_message.setInformativeText("Couldn't find required DLL files, you may need to adjust your antivirus settings.\n\nPlease read the Shield Documentation.\n")
     error_message.setStandardButtons(QMessageBox.Help | QMessageBox.Ok)
     error_message.setDefaultButton(QMessageBox.Help)
@@ -141,14 +139,24 @@ def missing_dll_exit():
         subprocess.Popen(['start', "https://shield-bo4.gitbook.io/document/launcher-guide/how-to-add-game-folder-exception-in-windows-defender"], shell=True)
     sys.exit()
 
-def CleanIpFile(file_path):  # Probably a better way to do this
+def clean_ip_file(file_path):  # Probably a better way to do this
     with open(file_path, "r+") as f: 
-        lines = f.readlines()
+        lines = set(f.readlines())
         f.seek(0)
         f.truncate()
-        for line in set(lines):
+        for line in lines:
             if re.search(IP_REGEX, line.strip("\n")):
                 f.write(line)
+
+def remove_old_dll_directories(): # Old DLL Directories
+    OLD_DIRS = ["reshade_solo", "reshade_mp", "solo", "mp"]
+    for i in OLD_DIRS:
+        old_dir_path = os.path.join(resources_dir, i)
+        if os.path.exists(old_dir_path):
+            try:
+                shutil.rmtree(old_dir_path)
+            except Exception as e:
+                print(f"Error removing {i}: {e}")
 
 class change_name(QDialog):
     def __init__(self, parent=None):
@@ -311,7 +319,7 @@ class change_ip(QDialog):
             with open(file_path, 'w') as file:
                 file.write(f"Empty\n")
         
-        CleanIpFile(file_path)
+        clean_ip_file(file_path)
 
         with open(file_path, 'r') as file:
             for line in file:
@@ -566,42 +574,46 @@ class launcher(QWidget):
             except Exception as e:
                 print(e)
 
-        if not os.path.exists(os.path.join(cwd, "LPC", ".manifest")) or not os.path.exists(os.path.join(cwd, "LPC", "core_ffotd_tu23_639_cf92ecf4a75d3f79.ff")) or not os.path.exists(os.path.join(cwd, "LPC", "core_playlists_tu23_639_cf92ecf4a75d3f79.ff")):
-            if os.path.exists(os.path.join(cwd, "LPC")):
-                try:
-                    shutil.rmtree(os.path.join(cwd, "LPC"))
-                except Exception as e:
-                    print(e)
-            
-            path_to_lpc = os.path.join(cwd, resources_dir, "LPC")
+        path_to_lpc = os.path.join(resources_dir, "LPC")
+        path_to_game_lpc = os.path.join(cwd, "LPC")
+        if os.path.exists(path_to_game_lpc):
+            for lpc_file in os.listdir(path_to_lpc):
+                current_game_lpc = os.path.join(path_to_game_lpc, lpc_file)
+                current_lpc = os.path.join(path_to_lpc, lpc_file)
+                if not os.path.exists(current_game_lpc):
+                    try:
+                        shutil.copyfile(current_lpc, current_game_lpc)
+                    except Exception as e:
+                        print(f"Error copying files: {e}")
+        else:
             try:
-                shutil.copytree(path_to_lpc, os.path.join(cwd, "LPC"))
-            except Exception as E:
-                print(f"Error copying files: {E}")
+                shutil.copytree(path_to_lpc, path_to_game_lpc)
+            except Exception as e:
+                print(f"Error copying files: {e}")
 
         print("RESHADE ==== " + str(reshade))
 
         if which == "solo":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_solo", "UMPDC.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_solo.zip")
                 else:
-                    path_to_dll = os.path.join(cwd, resources_dir, "solo", "d3d11.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "solo.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.copy(path_to_dll, cwd) 
+                    shutil.unpack_archive(path_to_dll)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
         elif which == "multi":
             try:
                 if reshade == "True":
-                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_mp", "UMPDC.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "reshade_mp.zip")
                 else:
-                    path_to_dll = os.path.join(cwd, resources_dir, "mp", "d3d11.dll")
+                    path_to_dll = os.path.join(cwd, resources_dir, "mp.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.copy(path_to_dll, cwd)
+                    shutil.unpack_archive(path_to_dll)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -631,6 +643,13 @@ class launcher(QWidget):
             try:
                 process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
+                for i in FILES_TO_REMOVE:
+                    if os.path.exists(i):
+                        try:
+                            os.remove(i)
+                        except Exception:
+                            print("Failed to remove Project-Bo4 Dll.")
+
             except Exception as e:
                 print(f"Error: {e}")
 
@@ -895,6 +914,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Something went wrong while cheching updates: {e}")
     
+    remove_old_dll_directories()
+
     # generade default name if not found
     get_json_item('project-bo4.json', 'identity', 'name')
     
