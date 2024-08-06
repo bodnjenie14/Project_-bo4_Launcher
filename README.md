@@ -5,6 +5,8 @@
 
 Launcher for Shield - Project Black ops 4 -  https://github.com/project-bo4/shield-development
 
+Readme For Shield Client (Modding Guide Ect) - https://shield-bo4.gitbook.io/
+
 What this does:
 
 Easy way of launching the client.
