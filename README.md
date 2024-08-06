@@ -5,6 +5,8 @@
 
 Launcher for Shield - Project Black ops 4 -  https://github.com/project-bo4/shield-development
 
+Readme For Shield Client (Modding Guide Ect) - https://shield-bo4.gitbook.io/
+
 What this does:
 
 Easy way of launching the client.
@@ -22,6 +24,6 @@ This project depends on Pyinstaller and PyQT5
 2. Compiling the project into a .exe file using Pyinstaller
 > It may be necessary to disable Windows Defender while compiling, otherwise it may produce an unusable executable
 
-`pyinstaller --onefile --windowed --icon="project-bo4\files\images\exe_icon_bo4.ico" --noconfirm project-bo4.py`
+`pyinstaller --onefile --windowed --icon="files\images\exe_icon_bo4.ico" --noconfirm project-bo4.py`
 
 Coded by Unknown Love
