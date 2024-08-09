@@ -2,6 +2,7 @@ import os
 import configparser
 import argparse
 import subprocess
+from tempfile import tempdir
 import threading
 import requests
 import zipfile
@@ -592,6 +593,8 @@ class launcher(QWidget):
                 print(f"Error copying files: {e}")
 
         print("RESHADE ==== " + str(reshade))
+        
+        dll_temp_dir = os.path.join(cwd, resources_dir, "temp-dll")
 
         if which == "solo":
             try:
@@ -601,7 +604,7 @@ class launcher(QWidget):
                     path_to_dll = os.path.join(cwd, resources_dir, "solo.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.unpack_archive(path_to_dll)
+                    shutil.unpack_archive(path_to_dll, dll_temp_dir)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -613,7 +616,7 @@ class launcher(QWidget):
                     path_to_dll = os.path.join(cwd, resources_dir, "mp.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.unpack_archive(path_to_dll)
+                    shutil.unpack_archive(path_to_dll, dll_temp_dir)
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -637,7 +640,15 @@ class launcher(QWidget):
             except Exception as e:
                 print(f"Error: {e}")
 
-            if not(os.path.exists("d3d11.dll") or os.path.exists("UMPDC.dll")): # Get a better way to check for DLLs
+            shield_dll = os.path.join(dll_temp_dir, FILES_TO_REMOVE[0]) # This copy is to try to get AVs to detect the dll IF they were going to do that later anyway
+            
+            if os.path.exists(shield_dll):
+                shutil.move(shield_dll, cwd)
+            else:
+                shield_dll = os.path.join(dll_temp_dir, FILES_TO_REMOVE[1])
+                shutil.move(shield_dll, cwd)
+
+            if not(os.path.exists(FILES_TO_REMOVE[0]) or os.path.exists(FILES_TO_REMOVE[1])): # Get a better way to check for DLLs
                 missing_dll_exit()
 
             try:
