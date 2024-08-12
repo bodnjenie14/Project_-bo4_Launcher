@@ -2,7 +2,6 @@ import os
 import configparser
 import argparse
 import subprocess
-from tempfile import tempdir
 import threading
 import requests
 import zipfile
@@ -576,25 +575,14 @@ class launcher(QWidget):
                 print(e)
 
         path_to_lpc = os.path.join(resources_dir, "LPC")
-        path_to_game_lpc = os.path.join(cwd, "LPC")
-        if os.path.exists(path_to_game_lpc):
-            for lpc_file in os.listdir(path_to_lpc):
-                current_game_lpc = os.path.join(path_to_game_lpc, lpc_file)
-                current_lpc = os.path.join(path_to_lpc, lpc_file)
-                if not os.path.exists(current_game_lpc):
-                    try:
-                        shutil.copyfile(current_lpc, current_game_lpc)
-                    except Exception as e:
-                        print(f"Error copying files: {e}")
-        else:
-            try:
-                shutil.copytree(path_to_lpc, path_to_game_lpc)
-            except Exception as e:
-                print(f"Error copying files: {e}")
+        PATH_TO_GAME_LPC = "LPC"
+        
+        if os.path.exists(PATH_TO_GAME_LPC):
+            shutil.rmtree(PATH_TO_GAME_LPC)
+        
+        shutil.copytree(path_to_lpc, PATH_TO_GAME_LPC)
 
         print("RESHADE ==== " + str(reshade))
-        
-        dll_temp_dir = os.path.join(cwd, resources_dir, "temp-dll")
 
         if which == "solo":
             try:
@@ -604,7 +592,8 @@ class launcher(QWidget):
                     path_to_dll = os.path.join(cwd, resources_dir, "solo.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.unpack_archive(path_to_dll, dll_temp_dir)
+                    with zipfile.ZipFile(path_to_dll, "r") as dllarchive:
+                        dllarchive.extractall()
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -616,7 +605,8 @@ class launcher(QWidget):
                     path_to_dll = os.path.join(cwd, resources_dir, "mp.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.unpack_archive(path_to_dll, dll_temp_dir)
+                    with zipfile.ZipFile(path_to_dll, "r") as dllarchive:
+                        dllarchive.extractall()
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -640,20 +630,13 @@ class launcher(QWidget):
             except Exception as e:
                 print(f"Error: {e}")
 
-            shield_dll = os.path.join(dll_temp_dir, FILES_TO_REMOVE[0]) # This copy is to try to get AVs to detect the dll IF they were going to do that later anyway
-            
-            if os.path.exists(shield_dll):
-                shutil.move(shield_dll, cwd)
-            else:
-                shield_dll = os.path.join(dll_temp_dir, FILES_TO_REMOVE[1])
-                shutil.move(shield_dll, cwd)
-
-            if not(os.path.exists(FILES_TO_REMOVE[0]) or os.path.exists(FILES_TO_REMOVE[1])): # Get a better way to check for DLLs
+            if not(os.path.exists(FILES_TO_REMOVE[0]) or os.path.exists(FILES_TO_REMOVE[1])): # Check for client DLL
                 missing_dll_exit()
 
             try:
                 process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
+                
                 for i in FILES_TO_REMOVE:
                     if os.path.exists(i):
                         try:
