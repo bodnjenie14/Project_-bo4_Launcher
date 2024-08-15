@@ -575,21 +575,12 @@ class launcher(QWidget):
                 print(e)
 
         path_to_lpc = os.path.join(resources_dir, "LPC")
-        path_to_game_lpc = os.path.join(cwd, "LPC")
-        if os.path.exists(path_to_game_lpc):
-            for lpc_file in os.listdir(path_to_lpc):
-                current_game_lpc = os.path.join(path_to_game_lpc, lpc_file)
-                current_lpc = os.path.join(path_to_lpc, lpc_file)
-                if not os.path.exists(current_game_lpc):
-                    try:
-                        shutil.copyfile(current_lpc, current_game_lpc)
-                    except Exception as e:
-                        print(f"Error copying files: {e}")
-        else:
-            try:
-                shutil.copytree(path_to_lpc, path_to_game_lpc)
-            except Exception as e:
-                print(f"Error copying files: {e}")
+        PATH_TO_GAME_LPC = "LPC"
+        
+        if os.path.exists(PATH_TO_GAME_LPC):
+            shutil.rmtree(PATH_TO_GAME_LPC)
+        
+        shutil.copytree(path_to_lpc, PATH_TO_GAME_LPC)
 
         print("RESHADE ==== " + str(reshade))
 
@@ -601,7 +592,8 @@ class launcher(QWidget):
                     path_to_dll = os.path.join(cwd, resources_dir, "solo.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.unpack_archive(path_to_dll)
+                    with zipfile.ZipFile(path_to_dll, "r") as dllarchive:
+                        dllarchive.extractall()
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -613,7 +605,8 @@ class launcher(QWidget):
                     path_to_dll = os.path.join(cwd, resources_dir, "mp.zip")
 
                 if os.path.exists(path_to_dll):
-                    shutil.unpack_archive(path_to_dll)
+                    with zipfile.ZipFile(path_to_dll, "r") as dllarchive:
+                        dllarchive.extractall()
             except Exception as e:
                 print(f"Error while copying dll files: {e}")
 
@@ -637,12 +630,13 @@ class launcher(QWidget):
             except Exception as e:
                 print(f"Error: {e}")
 
-            if not(os.path.exists("d3d11.dll") or os.path.exists("UMPDC.dll")): # Get a better way to check for DLLs
+            if not(os.path.exists(FILES_TO_REMOVE[0]) or os.path.exists(FILES_TO_REMOVE[1])): # Check for client DLL
                 missing_dll_exit()
 
             try:
                 process = subprocess.Popen("BlackOps4.exe")
                 process.wait()
+                
                 for i in FILES_TO_REMOVE:
                     if os.path.exists(i):
                         try:
