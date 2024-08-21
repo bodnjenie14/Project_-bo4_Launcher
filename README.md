@@ -11,7 +11,6 @@ What this does:
 
 Easy way of launching the client.
 
-Our Discord Server : https://discord.gg/AXECAzJJGU
 
 # Compile instructions 
 
