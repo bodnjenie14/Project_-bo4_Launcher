@@ -14,7 +14,7 @@ import socket
 import urllib
 import re
 
-IP_REGEX = r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$" #IP Validation
+IP_REGEX = r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$" #IP Validation
 
 cwd = os.getcwd()
 resources_dir = os.path.join(cwd, "project-bo4", "files")
