@@ -1,28 +1,55 @@
-# Project_-bo4_Launcher 
+# The Simpsons Tapped Out Ipa and Apk Patcher.
 
-![2](https://github.com/bodnjenie14/Project_-bo4_Launcher/assets/126781031/267ffdd6-9146-4041-96b0-34ffdedc03d8)
+A C++ Qt-based GUI application for patching The Simpsons Tapped Out APK/IPA. This application allows you to modify the apk to point to my private server.
+
+My private server for Tapped Out can be found here : [TSTO Private Server](https://github.com/bodnjenie14/Tsto---Simpsons-Tapped-Out---Private-Server/tree/main)
+
+Very Simple to use.
+
+![image](https://github.com/user-attachments/assets/4d6cba6c-ca69-4e7b-88cc-cb82369696ae)
+
+## Usage
+
+1. Launch the application
+2. Click "Check Dependencies" to ensure all required tools are installed
+3. Click "Browse" to select an APK/IPA file
+4. Enter the new Game Server URL and DLC Server URL
+5. Click "Patch APK" to process the file
+
+IP Address Example
+Server IP: http://192.168.1.1:80
+DLC IP: http://192.168.1.2:80
+
+---
+
+<h1 align="center">For the nerds</h1>
+
+## Prerequisites
+
+- Premake5
+- OpenJDK 11 or later
+- Visual Studio 2019 or later (for Windows)
+
+## Building
+
+1. Generate the project files using Premake:
+```cmd
+premake5 vs2019
+```
+
+3. Open the generated solution file in Visual Studio and build the project.
 
 
-Launcher for Shield - Project Black ops 4 -  https://github.com/project-bo4/shield-development
+## Features
 
-Readme For Shield Client (Modding Guide Ect) - https://shield-bo4.gitbook.io/
+- APK decompilation and recompilation using apktool
+- URL replacement in text-based files (.smali, .xml, .txt)
+- Binary patching of .so files
+- Dependency checking and installation
+- User-friendly GUI interface
 
-What this does:
+## Notes
 
-Easy way of launching the client.
+- The application requires Java for APK tool operations
+- Make sure you have write permissions in the application directory
 
-
-# Compile instructions 
-
-To compile this project, it is necessary to install Python3. Python3 can be downloaded from python.org
-
-1. Install dependencies
-This project depends on Pyinstaller and PyQT5
-`pip install pyinstaller pyqt5`
-
-2. Compiling the project into a .exe file using Pyinstaller
-> It may be necessary to disable Windows Defender while compiling, otherwise it may produce an unusable executable
-
-`pyinstaller --onefile --windowed --icon="files\images\exe_icon_bo4.ico" --noconfirm project-bo4.py`
-
-Coded by Unknown Love
