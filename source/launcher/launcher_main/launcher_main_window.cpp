@@ -3,6 +3,7 @@
 #include "style.hpp"
 #include "../launcher_funcs/dll_loading.hpp"
 #include "../launcher_funcs/json_utils.hpp"
+#include "../launcher_funcs/auto_update.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMessageBox>
@@ -155,6 +156,11 @@ progressBar(nullptr)
     progressBar->setStyleSheet("QProgressBar { border: 1px solid rgba(68, 68, 68, 180); text-align: center; background: transparent; } QProgressBar::chunk { background-color: rgba(85, 85, 85, 180); }");
     progressBar->setVisible(false);
     mainLayout->addWidget(progressBar);
+
+    // Check for updates after the window is fully initialized
+    QTimer::singleShot(500, this, [this]() {
+        updater::check_and_prompt_for_updates(this);
+    });
 
     //signals
     connect(onlineButton, &QPushButton::clicked, this, [this]() { startGame(true); });
