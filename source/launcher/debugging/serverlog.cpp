@@ -26,19 +26,8 @@ namespace logger
         "DISPATCH::TCP",
         "DISPATCH::UDP",
         "SERVER::HTTP",
-        "TRACKING",  
-        "GAME",
-        "LOBBY",
-        "AUTH",
-        "PIN",
-        "USER",
-        "LAND",
-        "SESSION",
-        "FILESERVER",
-        "EVENTS",
-		"DISCORD",
 		"UPDATE",
-		"DATABASE",
+
 
 
     };
@@ -130,7 +119,7 @@ namespace logger
         OutputDebugStringA(stream.str().c_str());
 #endif // OUTPUT_DEBUG_API
 
-        write("tsto_server.log", stream.str());
+        write("shield_launcher.log", stream.str());
     }
 
     void log_packet_buffer(const char* stub, const char* buffer, size_t length)
