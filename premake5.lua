@@ -162,3 +162,37 @@ project "launcher"
 
 group "Dependencies"
     dependencies.projects()
+
+-- Define the launcher shortcut project
+project "launcher_shortcut"
+    kind "WindowedApp"
+    language "C++"
+    targetname "Launch BO4"
+    cppdialect "C++20"
+    
+    files 
+    {
+        "./source/launcher_shortcut/**.cpp",
+        "./source/launcher_shortcut/**.rc",
+        "./source/launcher_shortcut/**.ico"
+    }
+    
+    includedirs
+    {
+        "source/launcher_shortcut"
+    }
+    
+    -- Copy the shortcut executable to the root directory after build
+    postbuildcommands {
+        "{COPY} \"%{cfg.buildtarget.abspath}\" \"%{wks.location}/../../\""
+    }
+    
+    filter "configurations:Release"
+        optimize "Size"
+        defines {"NDEBUG"}
+    filter {}
+    
+    filter "configurations:Debug"
+        defines {"_DEBUG"}
+        symbols "On"
+    filter {}
