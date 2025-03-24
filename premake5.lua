@@ -142,9 +142,11 @@ project "launcher"
 
     links {
         "utilities",  -- Links with utilities
-
     }
 	
+    postbuildcommands {
+ 
+    }
 
     -- Apply precompiled headers to moc files
     --filter "files:src/launcher/launcher/**.cpp"
@@ -167,7 +169,7 @@ group "Dependencies"
 project "launcher_shortcut"
     kind "WindowedApp"
     language "C++"
-    targetname "Launch BO4"
+    targetname "Launch Project BO4"
     cppdialect "C++20"
     
     files 

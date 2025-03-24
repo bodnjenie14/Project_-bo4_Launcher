@@ -42,26 +42,36 @@ progressBar(nullptr)
     setWindowTitle("Project-BO4");
     setFixedSize(800, 600);
 
-    // Set window icon
-    std::string currentDir = QCoreApplication::applicationDirPath().toStdString();
-    fs::path gamePath = fs::path(currentDir);
-    fs::path gameExePath = gamePath / "BlackOps4.exe";
     
-    if (!fs::exists(gameExePath)) {
-        fs::path parentPath = gamePath.parent_path().parent_path();
-        gameExePath = parentPath / "BlackOps4.exe";
-        
-        if (fs::exists(gameExePath)) {
-            gamePath = parentPath;
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    HICON hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(101)); 
+    
+    if (hIcon) {
+        SendMessage((HWND)winId(), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+        SendMessage((HWND)winId(), WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+    } else {
+        fs::path iconPath = fs::path(launcherDir) / "images" / "icon.ico";
+        if (fs::exists(iconPath)) {
+            HICON fileIcon = (HICON)LoadImageW(
+                NULL,
+                std::wstring(iconPath.wstring()).c_str(),
+                IMAGE_ICON,
+                0, 0,
+                LR_LOADFROMFILE
+            );
+            
+            if (fileIcon) {
+                SendMessage((HWND)winId(), WM_SETICON, ICON_SMALL, (LPARAM)fileIcon);
+                SendMessage((HWND)winId(), WM_SETICON, ICON_BIG, (LPARAM)fileIcon);
+            }
+            
+            // Also try Qt's approach
+            QIcon icon(QString::fromStdString(iconPath.string()));
+            if (!icon.isNull()) {
+                setWindowIcon(icon);
+                QApplication::setWindowIcon(icon);
+            }
         }
-    }
-    
-    fs::path iconPath = gamePath / "project-bo4" / "launcher" / "images" / "icon.png";
-    if (fs::exists(iconPath)) {
-        QIcon icon(QString::fromStdString(iconPath.string()));
-        setWindowIcon(icon);
-        // Also set as application icon
-        QApplication::setWindowIcon(icon);
     }
 
     setAttribute(Qt::WA_TranslucentBackground);
@@ -98,7 +108,7 @@ progressBar(nullptr)
     discordButton->setStyleSheet("background-color: rgba(85, 85, 85, 180); color: white; border: none; padding: 5px;");
     topRowLayout->addWidget(discordButton);
 
-    // Add spacer to push Docs button to the right
+    //spacer to push Docs button to the right
     QSpacerItem* spacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     topRowLayout->addItem(spacer);
 
@@ -245,6 +255,8 @@ void MainWindow::setName() {
     dialog.setWindowTitle("Set Name");
     dialog.setFixedWidth(400);
     
+    dialog.setWindowIcon(windowIcon());
+    
     dialog.setStyleSheet(Style::getDarkStyleSheet());
 
     QVBoxLayout layout(&dialog);
@@ -297,7 +309,8 @@ void MainWindow::setIp() {
     dialog.setWindowTitle("Set Server IP");
     dialog.setFixedWidth(400);
     
-    // Apply the dark style sheet
+    dialog.setWindowIcon(windowIcon());
+    
     dialog.setStyleSheet(Style::getDarkStyleSheet());
 
     QVBoxLayout layout(&dialog);
