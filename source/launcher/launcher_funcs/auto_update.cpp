@@ -14,7 +14,13 @@
 
 namespace updater {
 
-    const std::string SERVER_VERSION = "1.0.18.2";
+    const std::string SERVER_VERSION = "1.0.18.6";
+
+	//test repo for testing update soon as i fluffed it
+    //const std::string GITHUB_API_URL = "https://api.github.com/repos/bodnjenie14/bo4-test/releases/latest";
+    //const std::string DOWNLOAD_URL_BASE = "https://github.com/bodnjenie14/bo4-test/releases/download/";
+
+
     const std::string GITHUB_API_URL = "https://api.github.com/repos/bodnjenie14/Project_-bo4_Launcher/releases/latest";
     const std::string DOWNLOAD_URL_BASE = "https://github.com/bodnjenie14/Project_-bo4_Launcher/releases/download/";
 
@@ -74,7 +80,8 @@ namespace updater {
                 return false;
             }
 
-            if (latestVersion == "alpha" || latestVersion == "beta" || latestVersion == "release") {
+            // Extract version from asset name for special release types
+            if (latestVersion == "alpha" || latestVersion == "beta" || latestVersion == "release" || latestVersion == "Release") {
                 logger::write(logger::LOG_LEVEL_DEBUG, logger::LOG_LABEL_INITIALIZER,
                     "Special release type: %s. Extracting version from asset name: %s",
                     latestVersion.c_str(), assetName.c_str());
@@ -97,81 +104,14 @@ namespace updater {
                     return false;
                 }
 
-                std::string currentVer = SERVER_VERSION;
-                if (currentVer[0] == 'v' || currentVer[0] == 'V') {
-                    currentVer = currentVer.substr(1);
-                }
-
-                bool isNewer = false;
-
-                std::vector<std::string> currentParts;
-                std::vector<std::string> latestParts;
-
-                std::string currentVerCopy = currentVer;
-                size_t pos = 0;
-                while ((pos = currentVerCopy.find('.')) != std::string::npos) {
-                    currentParts.push_back(currentVerCopy.substr(0, pos));
-                    currentVerCopy.erase(0, pos + 1);
-                }
-                if (!currentVerCopy.empty()) {
-                    currentParts.push_back(currentVerCopy);
-                }
-
-                std::string latestVerCopy = versionStr;
-                pos = 0;
-                while ((pos = latestVerCopy.find('.')) != std::string::npos) {
-                    latestParts.push_back(latestVerCopy.substr(0, pos));
-                    latestVerCopy.erase(0, pos + 1);
-                }
-                if (!latestVerCopy.empty()) {
-                    latestParts.push_back(latestVerCopy);
-                }
-
-                size_t minSize = std::min(currentParts.size(), latestParts.size());
-                for (size_t i = 0; i < minSize; i++) {
-                    try {
-                        int currentNum = std::stoi(currentParts[i]);
-                        int latestNum = std::stoi(latestParts[i]);
-
-                        if (latestNum > currentNum) {
-                            isNewer = true;
-                            break;
-                        }
-                        else if (latestNum < currentNum) {
-                            isNewer = false;
-                            break;
-                        }
-                    }
-                    catch (const std::exception& e) {
-                        logger::write(logger::LOG_LEVEL_WARN, logger::LOG_LABEL_INITIALIZER,
-                            "Number conversion failed: %s. Falling back to string comparison.", e.what());
-
-                        if (latestParts[i] > currentParts[i]) {
-                            isNewer = true;
-                            break;
-                        }
-                        else if (latestParts[i] < currentParts[i]) {
-                            isNewer = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (!isNewer && currentParts.size() < latestParts.size()) {
-                    isNewer = true;
-                }
-
-                if (isNewer) {
+                // If the extracted version matches SERVER_VERSION, no update needed
+                if (versionStr == SERVER_VERSION) {
                     logger::write(logger::LOG_LEVEL_INFO, logger::LOG_LABEL_INITIALIZER,
-                        "Update available: %s -> %s", SERVER_VERSION.c_str(), versionStr.c_str());
-                    return true;
+                        "No update needed - current version is up to date");
+                    logger::write(logger::LOG_LEVEL_INFO, logger::LOG_LABEL_INITIALIZER,
+                        "Running latest version");
+                    return false;
                 }
-
-                logger::write(logger::LOG_LEVEL_INFO, logger::LOG_LABEL_INITIALIZER,
-                    "No update needed - current version is up to date");
-                logger::write(logger::LOG_LEVEL_INFO, logger::LOG_LABEL_INITIALIZER,
-                    "Running latest version");
-                return false;
             }
 
             std::string currentVer = SERVER_VERSION;
@@ -311,10 +251,12 @@ namespace updater {
         std::string currentExe = std::string(exePath);
         std::string exeDir = currentExe.substr(0, currentExe.find_last_of("\\"));
         std::string exeName = currentExe.substr(currentExe.find_last_of("\\") + 1);
+        std::string projectDir = exeDir.substr(0, exeDir.find_last_of("\\"));  // Get parent directory (project-bo4)
         std::string updateBatchPath = updateDir + "\\update.bat";
 
         logger::write(logger::LOG_LEVEL_DEBUG, logger::LOG_LABEL_INITIALIZER, "Current exe: %s", currentExe.c_str());
         logger::write(logger::LOG_LEVEL_DEBUG, logger::LOG_LABEL_INITIALIZER, "Exe directory: %s", exeDir.c_str());
+        logger::write(logger::LOG_LEVEL_DEBUG, logger::LOG_LABEL_INITIALIZER, "Project directory: %s", projectDir.c_str());
         logger::write(logger::LOG_LEVEL_DEBUG, logger::LOG_LABEL_INITIALIZER, "Exe name: %s", exeName.c_str());
 
         logger::write(logger::LOG_LEVEL_INFO, logger::LOG_LABEL_UPDATE, "[UPDATE] Downloading update file...");
@@ -366,7 +308,7 @@ namespace updater {
 
         std::string batchContent = "@echo off\r\n";
         batchContent += "echo Waiting for launcher to close...\r\n";
-        batchContent += "ping -n 3 127.0.0.1 > nul\r\n"; 
+        batchContent += "ping -n 5 127.0.0.1 > nul\r\n"; 
 
         batchContent += "echo Extracting update files...\r\n";
         batchContent += "powershell -Command \"Expand-Archive -Path '" + zipPath + "' -DestinationPath '" + updateDir + "' -Force\"\r\n";
@@ -377,7 +319,27 @@ namespace updater {
         batchContent += ")\r\n";
 
         batchContent += "echo Updating files...\r\n";
-        batchContent += "xcopy /s /y \"" + updateDir + "\\*\" \"" + exeDir + "\\\" > nul\r\n";
+        batchContent += "taskkill /f /im \"" + exeName + "\" > nul 2>&1\r\n";
+        batchContent += "ping -n 2 127.0.0.1 > nul\r\n";
+        
+        batchContent += "echo Checking for update files...\r\n";
+        batchContent += "if exist \"" + updateDir + "\\Project_BO4\\*\" (\r\n";
+        batchContent += "  echo Found nested Project_BO4 folder\r\n";
+        batchContent += "  xcopy /s /y \"" + updateDir + "\\Project_BO4\\*\" \"" + projectDir + "\\\" > nul\r\n";
+        batchContent += ") else if exist \"" + updateDir + "\\project-bo4\\*\" (\r\n";
+        batchContent += "  echo Found nested project-bo4 folder\r\n";
+        batchContent += "  xcopy /s /y \"" + updateDir + "\\project-bo4\\*\" \"" + projectDir + "\\\" > nul\r\n";
+        batchContent += ") else if exist \"" + updateDir + "\\launcher\\*\" (\r\n";
+        batchContent += "  echo Found launcher folder\r\n";
+        batchContent += "  xcopy /s /y \"" + updateDir + "\\launcher\\*\" \"" + exeDir + "\\\" > nul\r\n";
+        batchContent += "  for /d %%i in (\"" + updateDir + "\\*\") do (\r\n";
+        batchContent += "    if not \"%%~nxi\"==\"launcher\" xcopy /s /y \"%%i\\*\" \"" + projectDir + "\\%%~nxi\\\" > nul\r\n";
+        batchContent += "  )\r\n";
+        batchContent += ") else (\r\n";
+        batchContent += "  echo Using root folder\r\n";
+        batchContent += "  xcopy /s /y \"" + updateDir + "\\*\" \"" + projectDir + "\\\" > nul\r\n";
+        batchContent += ")\r\n";
+        
         batchContent += "if %ERRORLEVEL% NEQ 0 (\r\n";
         batchContent += "  echo Failed to copy update files!\r\n";
         batchContent += "  pause\r\n";
