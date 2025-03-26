@@ -13,4 +13,5 @@ namespace utils {
     std::string trimEnd(std::string str, char ch);
     
     bool runCommand(const std::string& command, std::string& output);
+    bool copyDirectoryRecursive(const std::string& sourceDir, const std::string& destDir, bool overwrite = true);
 }

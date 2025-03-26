@@ -57,9 +57,9 @@ namespace utils {
     }
 
     std::string trimEnd(std::string str, char ch) {
-        str.erase(std::find_if(str.rbegin(), str.rend(), [ch](char c) {
-            return c != ch;
-        }).base(), str.end());
+        while (!str.empty() && str.back() == ch) {
+            str.pop_back();
+        }
         return str;
     }
 
@@ -125,4 +125,42 @@ namespace utils {
         return pclose(pipe) == 0;
 #endif
     }
+
+    bool copyDirectoryRecursive(const std::string& sourceDir, const std::string& destDir, bool overwrite) {
+        namespace fs = std::filesystem;
+        
+        try {
+            if (!fs::exists(destDir)) {
+                if (!fs::create_directories(destDir)) {
+                    return false;
+                }
+            }
+            
+            for (const auto& entry : fs::directory_iterator(sourceDir)) {
+                const fs::path sourcePath = entry.path();
+                const fs::path destPath = fs::path(destDir) / sourcePath.filename();
+                
+                if (fs::is_directory(sourcePath)) {
+                    if (!copyDirectoryRecursive(sourcePath.string(), destPath.string(), overwrite)) {
+                        return false;
+                    }
+                } else if (fs::is_regular_file(sourcePath)) {
+                    if (fs::exists(destPath)) {
+                        if (overwrite) {
+                            fs::remove(destPath);
+                        } else {
+                            continue; 
+                        }
+                    }
+                    
+                    fs::copy_file(sourcePath, destPath, fs::copy_options::overwrite_existing);
+                }
+            }
+            
+            return true;
+        } catch (const std::exception& e) {
+            return false;
+        }
+    }
+
 }

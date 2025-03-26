@@ -7,11 +7,10 @@ qt6 = {
 function qt6.run_moc() -- func for qt moc headers needing moc processing with the correct path
     
     local headers = {
-        --"source/patcher/patching/patcher.hpp",
-        --"source/patcher/patching/apk_patcher.hpp",
-        --"source/patcher/patching/ipa_patcher.hpp",
-        "source/launcher/launcher_main/launcher_main_window.hpp"
-        -- Add moc headers as needed
+        "source/launcher/launcher_main/launcher_main_window.hpp",
+        "source/launcher/launcher_main/settings_dialog.hpp"
+
+        -- Add moc headers as needed if u make a new file that requires QT
     }
 
     -- output dir for the generated moc files

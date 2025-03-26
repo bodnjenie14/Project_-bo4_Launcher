@@ -45,6 +45,10 @@
 #include <atlbase.h>
 #include <iphlpapi.h>
 #include <wincrypt.h>
+#include <set>
+#include <filesystem>
+#include <mmdeviceapi.h>
+#include <endpointvolume.h>
 
 // min and max is required by gdi, therefore NOMINMAX won't work
 #ifdef max
@@ -72,20 +76,30 @@
 #include <optional>
 #include <unordered_set>
 #include <variant>
+#include <fstream>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QMessageBox>
+#include <QIcon>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QLineEdit>
+#include <QTimer>
+#include <QSpacerItem>
+#include <QSizePolicy>
+
+
+#include <QMainWindow>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QLabel>
+#include <QSlider>
+#include <QProgressBar>
+#include <QComboBox>
+#include <QMessageBox>
 
 #include <QtWidgets/QApplication>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QProcess>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtCore/QDebug>
-#include <QtCore/QDirIterator>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QXmlStreamReader>
-#include <QtCore/QXmlStreamWriter>
-#include <QtCore/QRegularExpression>
-
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QGridLayout>
@@ -97,8 +111,21 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTreeWidget>
+#include <QtWidgets/QStyledItemDelegate>
 
-
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QProcess>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QDebug>
+#include <QtCore/QDirIterator>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QXmlStreamWriter>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QVariant>
 #include <QtCore/QMap>
 #include <QtCore/QList>
@@ -112,6 +139,27 @@
 #include <QtCore/QWaitCondition>
 #include <QtCore/QReadWriteLock>
 #include <QtCore/QDateTime>
+
+#include <QHeaderView>
+#include <QFileInfo>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QComboBox>
+#include <QMenu>
+#include <QAction>
+#include <QInputDialog>
+#include <QMouseEvent>
+#include <QDialog>
+
+
+
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/filereadstream.h>
+#include <rapidjson/filewritestream.h>
+
 
 
 
