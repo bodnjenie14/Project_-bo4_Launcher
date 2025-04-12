@@ -426,31 +426,15 @@ void MainWindow::openDocs() {
 }
 
 void MainWindow::updateVolume(int value) {
-
+    // Only update the internal volume variable, don't change system volume
     volume = value;
     volumeLabel->setText(QString("Volume: %1%").arg(value));
-
-    HRESULT hr;
-    IMMDeviceEnumerator* deviceEnumerator = nullptr;
-    hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_INPROC_SERVER,
-        __uuidof(IMMDeviceEnumerator), (LPVOID*)&deviceEnumerator);
-    if (FAILED(hr)) return;
-
-    IMMDevice* defaultDevice = nullptr;
-    hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice);
-    deviceEnumerator->Release();
-    if (FAILED(hr)) return;
-
-    IAudioEndpointVolume* endpointVolume = nullptr;
-    hr = defaultDevice->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER,
-        nullptr, (LPVOID*)&endpointVolume);
-    defaultDevice->Release();
-    if (FAILED(hr)) return;
-
-    float newVolume = value / 100.0f;
-    endpointVolume->SetMasterVolumeLevelScalar(newVolume, nullptr);
-    endpointVolume->Release();
     
+    // If the MP3 is currently playing, update its volume
+    std::wstring volumeCmd = L"setaudio mp3 volume to " + std::to_wstring(value * 10);
+    mciSendStringW(volumeCmd.c_str(), NULL, 0, NULL);
+    
+    // Save the volume setting
     saveVolumeSettings();
 }
 
@@ -471,30 +455,11 @@ void MainWindow::playStartupSound() {
         return;
     }
 
-    HRESULT hr;
-    IMMDeviceEnumerator* deviceEnumerator = nullptr;
-    hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_INPROC_SERVER,
-        __uuidof(IMMDeviceEnumerator), (LPVOID*)&deviceEnumerator);
-    if (FAILED(hr)) return;
-
-    IMMDevice* defaultDevice = nullptr;
-    hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice);
-    deviceEnumerator->Release();
-    if (FAILED(hr)) return;
-
-    IAudioEndpointVolume* endpointVolume = nullptr;
-    hr = defaultDevice->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER,
-        nullptr, (LPVOID*)&endpointVolume);
-    defaultDevice->Release();
-    if (FAILED(hr)) return;
-
-    float newVolume = volume / 100.0f;
-    endpointVolume->SetMasterVolumeLevelScalar(newVolume, nullptr);
-    endpointVolume->Release();
-
+    // Close any existing MP3 playback
     std::wstring closeCmd = L"close mp3";
     mciSendStringW(closeCmd.c_str(), NULL, 0, NULL);
 
+    // Open the MP3 file
     std::wstring openCmd = L"open \"" + soundPath + L"\" type mpegvideo alias mp3";
     MCIERROR openError = mciSendStringW(openCmd.c_str(), NULL, 0, NULL);
     
@@ -505,7 +470,12 @@ void MainWindow::playStartupSound() {
                             QString::fromWCharArray(errorText));
         return;
     }
+    
+    // Set the volume for the MP3 (volume range for MCI is 0-1000, our volume is 0-100)
+    std::wstring volumeCmd = L"setaudio mp3 volume to " + std::to_wstring(volume * 10);
+    mciSendStringW(volumeCmd.c_str(), NULL, 0, NULL);
 
+    // Play the MP3
     std::wstring playCmd = L"play mp3";
     MCIERROR playError = mciSendStringW(playCmd.c_str(), NULL, 0, NULL);
     

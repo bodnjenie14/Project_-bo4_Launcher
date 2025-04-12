@@ -432,7 +432,7 @@ void SettingsDialog::saveSettings() {
             QString type = item->data(1, Qt::UserRole).toString();
             
             if (type == "bool") {
-                jsonValue.SetBool(item->checkState(1) == Qt::Checked);
+                jsonValue.SetBool(item->data(1, Qt::UserRole + 1).toBool());
             } else if (type == "int") {
                 jsonValue.SetInt(item->text(1).toInt());
             } else if (type == "double") {
@@ -478,7 +478,7 @@ void SettingsDialog::saveJsonFromTreeWidget(rapidjson::Document& doc, rapidjson:
             QString type = childItem->data(1, Qt::UserRole).toString();
             
             if (type == "bool") {
-                jsonValue.SetBool(childItem->checkState(1) == Qt::Checked);
+                jsonValue.SetBool(childItem->data(1, Qt::UserRole + 1).toBool());
             } else if (type == "int") {
                 jsonValue.SetInt(childItem->text(1).toInt());
             } else if (type == "double") {
