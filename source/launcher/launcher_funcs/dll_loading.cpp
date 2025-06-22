@@ -97,7 +97,7 @@ namespace DllLoading {
         if (gameDir.empty()) {
             return Result::InvalidGamePath;
         }
-        
+
         fs::path gamePath = fs::path(gameDir);
         fs::path gameExePath = gamePath / "BlackOps4.exe";
         
@@ -131,10 +131,36 @@ namespace DllLoading {
             return Result::FileNotFound;
         }
 
+        // zone shit
+        std::cout << "Copying zone folders..." << std::endl;
+
+        // --- Copy project-bo4/zone to <gameDir>/zone ---
+        try {
+            fs::path sourceZone = gamePath / "project-bo4" / "zone";
+            fs::path targetZone = gamePath / "zone";
+
+            if(fs::exists(sourceZone)) {
+                std::cout << "Copying zone files from: " << sourceZone.string() << " to: " << targetZone.string() << std::endl;
+                fs::create_directories(targetZone); // target exists?
+
+                for(const auto& entry : fs::directory_iterator(sourceZone)) {
+                    fs::path dest = targetZone / entry.path().filename();
+                    std::cout << "Copying: " << entry.path().string() << " -> " << dest.string() << std::endl;
+                    fs::copy(entry.path(), dest, fs::copy_options::overwrite_existing);
+                }
+            }
+            else {
+                std::cout << "Source zone directory does not exist: " << sourceZone.string() << std::endl;
+            }
+        }
+        catch(const std::exception& e) {
+            std::cout << "Failed to copy zone files: " << e.what() << std::endl;
+        }
+
         fs::path dllPath = gamePath / "XInput9_1_0.dll";
         if (fs::exists(dllPath)) {
-            std::cout << "DLL already exists, skipping extraction" << std::endl;
-            return Result::Success;
+            std::cout << "DLL already exists, will still extraction" << std::endl;
+            //return Result::Success;
         }
 
         try {
