@@ -131,6 +131,10 @@ namespace DllLoading {
             return Result::FileNotFound;
         }
 
+
+        // Note: not needed anymore cause of ATE47's plugin now loading zone from project-bo4/zone
+
+        /*
         // zone shit
         std::cout << "Copying zone folders..." << std::endl;
 
@@ -156,6 +160,7 @@ namespace DllLoading {
         catch(const std::exception& e) {
             std::cout << "Failed to copy zone files: " << e.what() << std::endl;
         }
+        */
 
         fs::path dllPath = gamePath / "XInput9_1_0.dll";
         if (fs::exists(dllPath)) {
