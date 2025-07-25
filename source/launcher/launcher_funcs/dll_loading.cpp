@@ -162,6 +162,20 @@ namespace DllLoading {
         }
         */
 
+        // delete the old support file, to avoid some getting ui errors cause of two zone files
+        fs::path supportFF = gamePath / "zone" / "support.ff";
+        try {
+            if(fs::exists(supportFF)) {
+                std::cout << "Deleting: " << supportFF.string() << std::endl;
+                fs::remove(supportFF);
+            }
+            else
+                std::cout << "Failed to delete support.ff, it does not exists.." << std::endl;
+        }
+        catch(const std::exception& e) {
+            std::cout << "Failed to delete support.ff: " << e.what() << std::endl;
+        }
+
         fs::path dllPath = gamePath / "XInput9_1_0.dll";
         if (fs::exists(dllPath)) {
             std::cout << "DLL already exists, will still extraction" << std::endl;
