@@ -14,7 +14,7 @@
 
 namespace updater {
 
-    const std::string SERVER_VERSION = "1.0.20.5.3";
+    const std::string SERVER_VERSION = "1.0.20.6.1";
 
 	//test repo for testing update soon as i fluffed it
     //const std::string GITHUB_API_URL = "https://api.github.com/repos/bodnjenie14/bo4-test/releases/latest";
